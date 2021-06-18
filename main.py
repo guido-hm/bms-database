@@ -150,6 +150,41 @@ class LoginWindow:
 		self.hospitalsTab = ttk.Frame(self.tabControl)
 		self.tabControl.add(self.hospitalsTab, text="Hospitals")
 
+		#Create Labels
+		hospitalName = tk.Label(self.hospitalsTab, text="First Name:")
+		hospitalPhone = tk.Label(self.hospitalsTab, text="Phone:")
+		hospitalEmail = tk.Label(self.hospitalsTab, text="Email:")
+		hospitalAddress = tk.Label(self.hospitalsTab, text="Specialty:")
+
+		#Create Entrys
+		hospitalNameEntry = tk.Entry(self.hospitalsTab)
+		hospitalPhoneEntry = tk.Entry(self.hospitalsTab)
+		hospitalEmailEntry = tk.Entry(self.hospitalsTab)
+		hospitalAddressEntry = tk.Entry(self.hospitalsTab)
+
+		#Create Buttons
+		buttonSearch = tk.Button(self.hospitalsTab, text="SEARCH")
+		buttonAdd = tk.Button(self.hospitalsTab, text="ADD")
+
+		#Add buttons onto frame using grid positioning
+		hospitalName.grid(row=0, column=0, padx=5, pady=5)
+		hospitalNameEntry.grid(row=0, column=1, padx=15, pady=5)
+
+		hospitalPhone.grid(row=1, column=0, padx=5, pady=5)
+		hospitalPhoneEntry.grid(row=1, column=1, padx=15, pady=5)
+
+		hospitalEmail.grid(row=2, column=0, padx=5, pady=5)
+		hospitalEmailEntry.grid(row=2, column=1, padx=15, pady=5)
+
+		doctorEmail.grid(row=3, column=0, padx=5, pady=5)
+		doctorEmailEntry.grid(row=3, column=1, padx=15, pady=5)
+
+		hospitalAddress.grid(row=4, column=0, padx=5, pady=5)
+		hospitalAddressEntry.grid(row=4, column=1, padx=15, pady=5)
+
+		buttonSearch.grid(row=6, column=0, padx=1, pady=5)
+		buttonAdd.grid(row=6, column=1, padx=1, pady=5)
+
 		#Others Tab
 		self.othersTab = ttk.Frame(self.tabControl)
 		self.tabControl.add(self.othersTab, text="Others")

@@ -1,5 +1,6 @@
 import tkinter as tk
 from tkinter import ttk
+import sqlite3 as sql
 
 #connecting to SQLite Database using DB Browser for SQLite
 con = sql.connect("./data.db")

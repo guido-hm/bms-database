@@ -1,6 +1,19 @@
 import tkinter as tk
 from tkinter import ttk
 
+#connecting to SQLite Database using DB Browser for SQLite
+con = sql.connect("./data.db")
+cur = con.cursor()
+statement = "SELECT username, password FROM users"
+cur.execute(statement)
+print("Usernames and passwords used for testing:")
+#remove this print eventually
+print(cur.fetchall())
+
+root = tk.Tk()
+root.title("Login")
+root.geometry("300x400")
+
 root = tk.Tk()
 root.title("Login")
 root.geometry("300x400")
@@ -43,7 +56,18 @@ class LoginWindow:
 		#	- Else, error window is displayed.
 
 		# Calling DatabaseWindow with no conditional temporarily
-		self.DatabaseWindow()
+		username = self.usernameEntry.get()
+		password = self.passwordEntry.get()
+		print(username)
+		con = sql.connect("data.db")
+		cur = con.cursor()
+		statement = f"SELECT username from users WHERE username='{username}' AND Password = '{password}';"
+		cur.execute(statement)
+		if not cur.fetchone():  # An empty result evaluates to False.
+		    print("Login failed")
+		else:
+		    print("Welcome")
+		    self.DatabaseWindow()
 
 	def DatabaseWindow(self):
 		# TODO: Build Function

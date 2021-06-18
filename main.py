@@ -73,7 +73,7 @@ class LoginWindow:
 		    print("Welcome")
 		    self.DatabaseWindow()
 
-	def DatabaseWindow(self):
+def DatabaseWindow(self):
 		# TODO: Build Function
 		#	- Self.loginFrame and everything in it will be destroyed
 		#	  and a new frame will be created, where the rest of the program will live.
@@ -88,22 +88,66 @@ class LoginWindow:
 		self.tabControl.pack(expand=1, fill="both")
 
 		# Tabs
+
+		#Doctors Tab
+
+		#Create Labels
 		self.doctorsTab = ttk.Frame(self.tabControl)
 		self.tabControl.add(self.doctorsTab, text="Doctors")
+		doctorFirstName = tk.Label(self.doctorsTab, text="First Name:")
+		doctorLastName = tk.Label(self.doctorsTab, text="Last Name:")
+		doctorPhone = tk.Label(self.doctorsTab, text="Phone:")
+		doctorEmail = tk.Label(self.doctorsTab, text="Email:")
+		doctorSpecialty = tk.Label(self.doctorsTab, text="Specialty:")
+		doctorHospital = tk.Label(self.doctorsTab, text="Hospital:")
 
+		#Create Entrys
+		doctorFirstNameEntry = tk.Entry(self.doctorsTab)
+		doctorLastNameEntry = tk.Entry(self.doctorsTab)
+		doctorPhoneEntry = tk.Entry(self.doctorsTab)
+		doctorEmailEntry = tk.Entry(self.doctorsTab)
+		doctorSpecialtyEntry = tk.Entry(self.doctorsTab)
+		doctorHospitalEntry = tk.Entry(self.doctorsTab)
+
+		#Create Buttons
+		buttonSearch = tk.Button(self.doctorsTab, text="SEARCH")
+		buttonAdd = tk.Button(self.doctorsTab, text="ADD")
+
+		#Add buttons onto frame using grid positioning
+		doctorFirstName.grid(row=0, column=0, padx=5, pady=5)
+		doctorFirstNameEntry.grid(row=0, column=1, padx=15, pady=5)
+
+		doctorLastName.grid(row=1, column=0, padx=5, pady=5)
+		doctorLastNameEntry.grid(row=1, column=1, padx=15, pady=5)
+
+		doctorPhone.grid(row=2, column=0, padx=5, pady=5)
+		doctorPhoneEntry.grid(row=2, column=1, padx=15, pady=5)
+
+		doctorEmail.grid(row=3, column=0, padx=5, pady=5)
+		doctorEmailEntry.grid(row=3, column=1, padx=15, pady=5)
+
+		doctorSpecialty.grid(row=4, column=0, padx=5, pady=5)
+		doctorSpecialtyEntry.grid(row=4, column=1, padx=15, pady=5)
+
+		doctorHospital.grid(row=5, column=0, padx=5, pady=5)
+		doctorHospitalEntry.grid(row=5, column=1, padx=15, pady=5)
+
+		buttonSearch.grid(row=6, column=0, padx=1, pady=5)
+		buttonAdd.grid(row=6, column=1, padx=1, pady=5)
+
+
+
+		#Hospitals Tab
 		self.hospitalsTab = ttk.Frame(self.tabControl)
 		self.tabControl.add(self.hospitalsTab, text="Hospitals")
 
+		#Others Tab
 		self.othersTab = ttk.Frame(self.tabControl)
 		self.tabControl.add(self.othersTab, text="Others")
 
+		#Resellers Tab
 		self.resellersTab = ttk.Frame(self.tabControl)
 		self.tabControl.add(self.resellersTab, text="Resellers")
-
-		
-
-
-
 
 		# New frame for database created
 		# self.databaseFrame = tk.Frame(self.master)

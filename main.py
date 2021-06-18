@@ -55,10 +55,19 @@ class LoginWindow:
 
 		# TODO: Build Function
 		#	- Figure out where usernames and passwords will be stored
+			#ANSWER: SQLite, I used DBBrowswer for SQLite
+			#Followed this tutorial: 
+			#https://compucademy.net/user-login-with-python-and-sqlite/
 		#	- Add if else statement. If login is successful, DatabaseWindow() is called.
+			#DONE
 		#	- Else, error window is displayed.
+			#DONE
 
 		# Calling DatabaseWindow with no conditional temporarily
+
+		#Verifies user input with stored usernames in Database
+		#Not encrypted but should be safe if only used locally
+
 		username = self.usernameEntry.get()
 		password = self.passwordEntry.get()
 		print(username)
@@ -73,7 +82,7 @@ class LoginWindow:
 		    print("Welcome")
 		    self.DatabaseWindow()
 
-def DatabaseWindow(self):
+	def DatabaseWindow(self):
 		# TODO: Build Function
 		#	- Self.loginFrame and everything in it will be destroyed
 		#	  and a new frame will be created, where the rest of the program will live.

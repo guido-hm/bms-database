@@ -37,7 +37,7 @@ class LoginWindow:
 		self.passwordLabel = tk.Label(self.loginFrame, font="Calibri 14", text="Password: ")
 		self.passwordLabel.place(relx=0.1, rely=0.65, relwidth=0.3, relheight=0.05)
 
-		self.passwordEntry = tk.Entry(self.loginFrame)
+		self.passwordEntry = tk.Entry(self.loginFrame, show="*")
 		self.passwordEntry.place(relx=0.4, rely=0.65, relwidth=0.5, relheight=0.05)
 
 		#Login Button

@@ -15,10 +15,6 @@ root = tk.Tk()
 root.title("Login")
 root.geometry("300x400")
 
-root = tk.Tk()
-root.title("Login")
-root.geometry("300x400")
-
 class LoginWindow:
 	def __init__(self, master):
 		self.master = master

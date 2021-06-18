@@ -1,4 +1,5 @@
 import tkinter as tk
+from tkinter import ttk
 
 root = tk.Tk()
 root.title("Login")
@@ -54,13 +55,31 @@ class LoginWindow:
 		# Changes the window size
 		root.geometry("900x500")
 
-		# New frame for database created
-		self.databaseFrame = tk.Frame(self.master)
-		self.databaseFrame.place(relwidth=1, relheight=1)
+		# Tab Control
+		self.tabControl = ttk.Notebook(self.master)
+		self.tabControl.pack(expand=1, fill="both")
 
-		# TODO: Build Function
-		#	- Self.loginFrame and everything in it will be destroyed
-		#	  and a new frame will be created, where the rest of the program will live.
+		# Tabs
+		self.doctorsTab = ttk.Frame(self.tabControl)
+		self.tabControl.add(self.doctorsTab, text="Doctors")
+
+		self.hospitalsTab = ttk.Frame(self.tabControl)
+		self.tabControl.add(self.hospitalsTab, text="Hospitals")
+
+		self.othersTab = ttk.Frame(self.tabControl)
+		self.tabControl.add(self.othersTab, text="Others")
+
+		self.resellersTab = ttk.Frame(self.tabControl)
+		self.tabControl.add(self.resellersTab, text="Resellers")
+
+		
+
+
+
+
+		# New frame for database created
+		# self.databaseFrame = tk.Frame(self.master)
+		# self.databaseFrame.place(relwidth=1, relheight=1)
 
 
 

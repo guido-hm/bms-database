@@ -15,6 +15,7 @@ root = tk.Tk()
 root.title("Login")
 root.geometry("300x400")
 
+
 class LoginWindow:
 	def __init__(self, master):
 		self.master = master
@@ -43,6 +44,11 @@ class LoginWindow:
 		self.loginButton = tk.Button(self.loginFrame, font="Calibri 14", text="Login", command = lambda: self.Login(self.usernameEntry.get(), self.passwordEntry.get()))
 		self.loginButton.place(relx=0.3, rely=0.8, relwidth=0.4, relheight=0.1)
 
+		#Error Message
+		self.ErrorLabel = tk.Label(self.loginFrame, font="Calibri 14", text="")
+		self.ErrorLabel.place(relx=0.1, rely=0.9)
+
+
 	def Login(self, username, password):
 		""" Compares the entered password hash to the hash stored in the database.
 		If it matches, login is successful."""
@@ -62,6 +68,7 @@ class LoginWindow:
 		cur.execute(statement)
 		if not cur.fetchone():  # An empty result evaluates to False.
 		    print("Login failed")
+		    self.ErrorLabel.config(text='Wrong Login Information, Try Again.', fg="red")
 		else:
 		    print("Welcome")
 		    self.DatabaseWindow()

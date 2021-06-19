@@ -16,7 +16,7 @@ root.title("Login")
 root.geometry("300x400")
 
 
-class LoginWindow:
+class MainWindow:
 	def __init__(self, master):
 		self.master = master
 
@@ -83,9 +83,6 @@ class LoginWindow:
 		    self.DatabaseWindow()
 
 	def DatabaseWindow(self):
-		# TODO: Build Function
-		#	- Self.loginFrame and everything in it will be destroyed
-		#	  and a new frame will be created, where the rest of the program will live.
 
 		self.loginFrame.destroy()
 
@@ -96,13 +93,18 @@ class LoginWindow:
 		self.tabControl = ttk.Notebook(self.master)
 		self.tabControl.pack(expand=1, fill="both")
 
-		# Tabs
 
-		#Doctors Tab
+	# TODO: Add info-viewer for every tab
+	#	- Scrollable widget
 
-		#Create Labels
+	# TODO: Figure out if each tab can be its own class or function
+
+	# Doctors Tab
+
 		self.doctorsTab = ttk.Frame(self.tabControl)
 		self.tabControl.add(self.doctorsTab, text="Doctors")
+
+		#Create Labels
 		doctorFirstName = tk.Label(self.doctorsTab, text="First Name:")
 		doctorLastName = tk.Label(self.doctorsTab, text="Last Name:")
 		doctorPhone = tk.Label(self.doctorsTab, text="Phone:")
@@ -116,11 +118,14 @@ class LoginWindow:
 		doctorPhoneEntry = tk.Entry(self.doctorsTab)
 		doctorEmailEntry = tk.Entry(self.doctorsTab)
 		doctorSpecialtyEntry = tk.Entry(self.doctorsTab)
+
+		# TODO: Change Hospital Entry to a Drop Down Menu
 		doctorHospitalEntry = tk.Entry(self.doctorsTab)
 
 		#Create Buttons
-		buttonSearch = tk.Button(self.doctorsTab, text="SEARCH")
-		buttonAdd = tk.Button(self.doctorsTab, text="ADD")
+		buttonSearch = tk.Button(self.doctorsTab, font="Calibri 12", text="SEARCH")
+		buttonAdd = tk.Button(self.doctorsTab, font="Calibri 12", text="  ADD  ")
+		buttonImport = tk.Button(self.doctorsTab, font="Calibri 12", text="IMPORT")
 
 		#Add buttons onto frame using grid positioning
 		doctorFirstName.grid(row=0, column=0, padx=5, pady=5)
@@ -143,28 +148,36 @@ class LoginWindow:
 
 		buttonSearch.grid(row=6, column=0, padx=1, pady=5)
 		buttonAdd.grid(row=6, column=1, padx=1, pady=5)
+		buttonImport.grid(row=6, column=2, padx=1, pady=5)
 
 
 
-		#Hospitals Tab
+	# Hospitals Tab
+
 		self.hospitalsTab = ttk.Frame(self.tabControl)
 		self.tabControl.add(self.hospitalsTab, text="Hospitals")
 
+
 		#Create Labels
-		hospitalName = tk.Label(self.hospitalsTab, text="First Name:")
+		hospitalName = tk.Label(self.hospitalsTab, text="Name:")
 		hospitalPhone = tk.Label(self.hospitalsTab, text="Phone:")
 		hospitalEmail = tk.Label(self.hospitalsTab, text="Email:")
-		hospitalAddress = tk.Label(self.hospitalsTab, text="Specialty:")
+		hospitalCity = tk.Label(self.hospitalsTab, text="City:")
+		hospitalState = tk.Label(self.hospitalsTab, text="State:")
+		hospitalZip = tk.Label(self.hospitalsTab, text="Zip:")
 
 		#Create Entrys
 		hospitalNameEntry = tk.Entry(self.hospitalsTab)
 		hospitalPhoneEntry = tk.Entry(self.hospitalsTab)
 		hospitalEmailEntry = tk.Entry(self.hospitalsTab)
-		hospitalAddressEntry = tk.Entry(self.hospitalsTab)
+		hospitalCityEntry = tk.Entry(self.hospitalsTab)
+		hospitalStateEntry = tk.Entry(self.hospitalsTab)
+		hospitalZipEntry = tk.Entry(self.hospitalsTab)
 
 		#Create Buttons
-		buttonSearch = tk.Button(self.hospitalsTab, text="SEARCH")
-		buttonAdd = tk.Button(self.hospitalsTab, text="ADD")
+		buttonSearch = tk.Button(self.hospitalsTab, font="Calibri 12", text="SEARCH")
+		buttonAdd = tk.Button(self.hospitalsTab, font="Calibri 12", text="  ADD  ")
+		buttonImport = tk.Button(self.hospitalsTab, font="Calibri 12", text="IMPORT")
 
 		#Add buttons onto frame using grid positioning
 		hospitalName.grid(row=0, column=0, padx=5, pady=5)
@@ -176,22 +189,109 @@ class LoginWindow:
 		hospitalEmail.grid(row=2, column=0, padx=5, pady=5)
 		hospitalEmailEntry.grid(row=2, column=1, padx=15, pady=5)
 
-		doctorEmail.grid(row=3, column=0, padx=5, pady=5)
-		doctorEmailEntry.grid(row=3, column=1, padx=15, pady=5)
+		hospitalCity.grid(row=3, column=0, padx=5, pady=5)
+		hospitalCityEntry.grid(row=3, column=1, padx=15, pady=5)
 
-		hospitalAddress.grid(row=4, column=0, padx=5, pady=5)
-		hospitalAddressEntry.grid(row=4, column=1, padx=15, pady=5)
+		hospitalState.grid(row=4, column=0, padx=5, pady=5)
+		hospitalStateEntry.grid(row=4, column=1, padx=15, pady=5)
+
+		hospitalZip.grid(row=5, column=0, padx=1, pady=5)
+		hospitalZipEntry.grid(row=5, column=1, padx=1, pady=5)
+		
 
 		buttonSearch.grid(row=6, column=0, padx=1, pady=5)
 		buttonAdd.grid(row=6, column=1, padx=1, pady=5)
+		buttonImport.grid(row=6, column=2, padx=1, pady=5)
 
-		#Others Tab
+	# Others Tab
+
 		self.othersTab = ttk.Frame(self.tabControl)
 		self.tabControl.add(self.othersTab, text="Others")
 
-		#Resellers Tab
+		otherFirstName = tk.Label(self.othersTab, text="First Name:")
+		otherLastName = tk.Label(self.othersTab, text="Last Name:")
+		otherPhone = tk.Label(self.othersTab, text="Phone:")
+		otherEmail = tk.Label(self.othersTab, text="Email:")
+		otherOccupation = tk.Label(self.othersTab, text="Specialty:")
+		otherHospital = tk.Label(self.othersTab, text="Hospital:")
+
+		#Create Entrys
+		otherFirstNameEntry = tk.Entry(self.othersTab)
+		otherLastNameEntry = tk.Entry(self.othersTab)
+		otherPhoneEntry = tk.Entry(self.othersTab)
+		otherEmailEntry = tk.Entry(self.othersTab)
+		otherOccupationEntry = tk.Entry(self.othersTab)
+
+		# TODO: Change Hospital Entry to a Drop Down Menu
+		otherHospitalEntry = tk.Entry(self.othersTab)
+
+		#Create Buttons
+		buttonSearch = tk.Button(self.othersTab, font="Calibri 12", text="SEARCH")
+		buttonAdd = tk.Button(self.othersTab, font="Calibri 12", text="  ADD  ")
+		buttonImport = tk.Button(self.othersTab, font="Calibri 12", text="IMPORT")
+
+		#Add buttons onto frame using grid positioning
+		otherFirstName.grid(row=0, column=0, padx=5, pady=5)
+		otherFirstNameEntry.grid(row=0, column=1, padx=15, pady=5)
+
+		otherLastName.grid(row=1, column=0, padx=5, pady=5)
+		otherLastNameEntry.grid(row=1, column=1, padx=15, pady=5)
+
+		otherPhone.grid(row=2, column=0, padx=5, pady=5)
+		otherPhoneEntry.grid(row=2, column=1, padx=15, pady=5)
+
+		otherEmail.grid(row=3, column=0, padx=5, pady=5)
+		otherEmailEntry.grid(row=3, column=1, padx=15, pady=5)
+
+		otherOccupation.grid(row=4, column=0, padx=5, pady=5)
+		otherOccupationEntry.grid(row=4, column=1, padx=15, pady=5)
+
+		otherHospital.grid(row=5, column=0, padx=5, pady=5)
+		otherHospitalEntry.grid(row=5, column=1, padx=15, pady=5)
+
+		buttonSearch.grid(row=6, column=0, padx=1, pady=5)
+		buttonAdd.grid(row=6, column=1, padx=1, pady=5)
+		buttonImport.grid(row=6, column=2, padx=1, pady=5)
+
+
+	# Resellers Tab
+
 		self.resellersTab = ttk.Frame(self.tabControl)
 		self.tabControl.add(self.resellersTab, text="Resellers")
+
+		resellerFirstName = tk.Label(self.resellersTab, text="First Name:")
+		resellerLastName = tk.Label(self.resellersTab, text="Last Name:")
+		resellerPhone = tk.Label(self.resellersTab, text="Phone:")
+		resellerEmail = tk.Label(self.resellersTab, text="Email:")
+
+		#Create Entrys
+		resellerFirstNameEntry = tk.Entry(self.resellersTab)
+		resellerLastNameEntry = tk.Entry(self.resellersTab)
+		resellerPhoneEntry = tk.Entry(self.resellersTab)
+		resellerEmailEntry = tk.Entry(self.resellersTab)
+
+		#Create Buttons
+		buttonSearch = tk.Button(self.resellersTab, font="Calibri 12", text="SEARCH")
+		buttonAdd = tk.Button(self.resellersTab, font="Calibri 12", text="  ADD  ")
+		buttonImport = tk.Button(self.resellersTab, font="Calibri 12", text="IMPORT")
+
+		#Add buttons onto frame using grid positioning
+		resellerFirstName.grid(row=0, column=0, padx=5, pady=5)
+		resellerFirstNameEntry.grid(row=0, column=1, padx=15, pady=5)
+
+		resellerLastName.grid(row=1, column=0, padx=5, pady=5)
+		resellerLastNameEntry.grid(row=1, column=1, padx=15, pady=5)
+
+		resellerPhone.grid(row=2, column=0, padx=5, pady=5)
+		resellerPhoneEntry.grid(row=2, column=1, padx=15, pady=5)
+
+		resellerEmail.grid(row=3, column=0, padx=5, pady=5)
+		resellerEmailEntry.grid(row=3, column=1, padx=15, pady=5)
+
+		buttonSearch.grid(row=4, column=0, padx=1, pady=5)
+		buttonAdd.grid(row=4, column=1, padx=1, pady=5)
+		buttonImport.grid(row=4, column=2, padx=1, pady=5)
+
 
 		# New frame for database created
 		# self.databaseFrame = tk.Frame(self.master)
@@ -200,5 +300,5 @@ class LoginWindow:
 
 
 
-window = LoginWindow(root)
+window = MainWindow(root)
 root.mainloop()

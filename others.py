@@ -18,8 +18,22 @@ class OthersTab:
 		self.otherEmailEntry = tk.Entry(tabFrame)
 		self.otherOccupationEntry = tk.Entry(tabFrame)
 
-		# TODO: Change Hospital Entry to a Drop Down Menu
-		self.otherHospitalEntry = tk.Entry(tabFrame)
+		
+
+		# Temporary List(DELETE LATER)
+		hospitalList = ['Texas General Hospital', 'Northwest Hospital', 'Baylor Medical Center of Irving', 'Medical Center of Lewisville', 'Methodist Richardson Medical Center']
+
+		#Create OptionMenu
+		
+		# TODO: Fix problem
+		#	- Every time a hospital is selected, the OptionMenu takes on its size.
+		#	  This changes the width of the whole grid's column, moving all elements on that column
+		# SOLUTION IDEA: Put OptionMenu on screen using .place() rather than .grid()
+
+		self.otherHospitalVar = tk.StringVar(tabFrame)
+		self.otherHospitalVar.set(hospitalList[0])
+		self.otherHospitalOptionMenu = tk.OptionMenu(tabFrame, self.otherHospitalVar, *hospitalList)
+
 
 		#Create Buttons
 		self.buttonSearch = tk.Button(tabFrame, font="Calibri 12", text="SEARCH")
@@ -43,7 +57,7 @@ class OthersTab:
 		self.otherOccupationEntry.grid(row=4, column=1, padx=15, pady=5)
 
 		self.otherHospital.grid(row=5, column=0, padx=5, pady=5)
-		self.otherHospitalEntry.grid(row=5, column=1, padx=15, pady=5)
+		self.otherHospitalOptionMenu.grid(row=5, column=1, padx=15, pady=5)
 
 		self.buttonSearch.grid(row=6, column=0, padx=1, pady=5)
 		self.buttonAdd.grid(row=6, column=1, padx=1, pady=5)

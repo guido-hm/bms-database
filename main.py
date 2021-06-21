@@ -88,7 +88,7 @@ class MainWindow:
 		self.loginFrame.destroy()
 
 		# Changes the window size
-		root.geometry("900x500")
+		root.geometry("1200x650")
 
 		# Tab Control
 		self.tabControl = ttk.Notebook(self.master)
@@ -96,25 +96,27 @@ class MainWindow:
 
 
 		# Doctors Tab
-		self.doctorsTabFrame = ttk.Frame(self.tabControl)
+		self.doctorsTabFrame = tk.Frame(self.tabControl)
 		self.tabControl.add(self.doctorsTabFrame, text="Doctors")
-		self.doctorsTabInfo = doctors.doctorsTab(self.doctorsTabFrame)
+		self.doctorsTabInfo = doctors.DoctorsTab(self.doctorsTabFrame)
 
 		# Hospitals Tab
-		self.hospitalsTabFrame = ttk.Frame(self.tabControl)
+		self.hospitalsTabFrame = tk.Frame(self.tabControl)
 		self.tabControl.add(self.hospitalsTabFrame, text="Hospitals")
-		self.hospitalsTabInfo = hospitals.hospitalsTab(self.hospitalsTabFrame)
+		self.hospitalsTabInfo = hospitals.HospitalsTab(self.hospitalsTabFrame)
 
 		# Others Tab
-		self.othersTabFrame = ttk.Frame(self.tabControl)
+		self.othersTabFrame = tk.Frame(self.tabControl)
 		self.tabControl.add(self.othersTabFrame, text="Others")
-		self.othersTabInfo = others.othersTab(self.othersTabFrame)
+		self.othersTabInfo = others.OthersTab(self.othersTabFrame)
 
 
 		# Resellers Tab
-		self.resellersTabFrame = ttk.Frame(self.tabControl)
+		self.resellersTabFrame = tk.Frame(self.tabControl)
 		self.tabControl.add(self.resellersTabFrame, text="Resellers")
-		self.resellersTabInfo = resellers.resellersTab(self.resellersTabFrame)
+		self.resellersTabInfo = resellers.ResellersTab(self.resellersTabFrame)
+
+
 
 
 

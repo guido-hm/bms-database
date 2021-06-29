@@ -60,9 +60,6 @@ class DoctorsTab:
 		self.buttonAdd.grid(row=6, column=1, padx=1, pady=5)
 		self.buttonImport.grid(row=6, column=2, padx=1, pady=5)
 
-		# TODO: Add info-viewer for tab
-		#	- Scrollable widget
-
 		# Creates info-viewer section of tab
 		self.infoViewer = DoctorsInfoViewer(tabFrame)
 
@@ -72,13 +69,22 @@ class DoctorsTab:
 class DoctorsInfoViewer:
 	def __init__(self, frame):
 
+		## Each character of font "consolas 12" takes up 9 pixels. 
+		## This info can be used to later create a window that works on any screen size by getting ratios
+
 		# 3 Frames. titleFrame and contentFrame are inside viewerFrame.
 		self.viewerFrame = tk.Frame(frame, bg='light green')
 		self.viewerFrame.place(relx=0.02, rely=0.4, relwidth=0.96, relheight=0.58)
-
+		
+		# Creates frame for titles
 		self.titleFrame = tk.Frame(self.viewerFrame, bg='light blue')
 		self.titleFrame.place(relwidth=1, relheight=0.06)
 
+		# Creates label for titles
+		self.titleLabel = tk.Label(self.titleFrame, anchor='w', font= "consolas 12", text='{:<16}|{:<24}|{:<16}|{:<28}|{:<24}|{:<44}'.format("First Name", "Last Name", "Phone #", "Email", "Specialty", "Hospital"))
+		self.titleLabel.place(relwidth=1, relheight=1)
+
+		# Creates frame for info
 		self.infoFrame = tk.Frame(self.viewerFrame, bg='pink')
 		self.infoFrame.place(rely=0.06, relwidth=1, relheight=0.94)
 
@@ -101,14 +107,24 @@ class DoctorsInfoViewer:
 
 	def populateListbox(self):
 
-		# TODO: Write function to fill in listbox with doctors data
+		# TODO: Write function to fill in listbox with doctors data. Everything currently in here is temporary.
 		# Example on how to fill in data:
-		#	- myListbox.insert('end', '{:<14} {:<13} {:<5} {:<5} {:<5} {:<5}'.format(first, last, email, phone, speciality, hospital))
-
-
+		#	- myListbox.insert('end', '{:<14} {:<13} {:<5} {:<5} {:<5} {:<5}'.format(first, last, email, phone, specialty, hospital))
+		listFirst = ['Alberto', 'Roman', 'Guido', 'Joe', 'Alejandro Roberto', 'Guidwardo', 'Gabriel', 'Garbanzo', 'Araseli', 'Maria Jose']
+		listLast = ['Gonzalez', "Martinez", "Herrera", "Trejo", "Feroz", 'Herraduramistico', 'Trejo', 'De La Ensalada', 'La Mera Mera', 'La Chava']
+		listPhone = ["9565344764", "9565385939", "8999345781", "1234567890", "2439046372", "7783923453", "1528992847168", "3944630432", "0987654321", "9345743453"]
+		listEmail = ["gonzalberto@gmail.com", "romanisgay@yahoo.com", "guidohm@tamu.edu", "joe@hotmail.com", "alerob123@gmail.com", "guidwardo@gmail.com", "gabe@gmail.com", "garbanzo234@elpolloloco.com", "ara@domain.com", "lachava@hotmail.com"]
+		listSpecialty = ["Cardiologists", "Deeznotolist", "Ortopologist", "Dentist", "Cardiologists", "Cardiologists", "Genetisist", "Nurse", "Deeznotolist" ,"Cardiologists"]
+		listHospital = ["Hospital San Andres de la Guardia en La Santa Cruz Aveztruz", "Star Childrens Hospital Dallas", "MAC Hospital Mexico City", "Texas General Hospital", "Northwest Hospital", "Baylor Medical Center of Irving", "Medical Center of Lewisville", "Methodist Richardson Medical Center", "Catholic District of People Hospital", "Putos Se La Come Northwestern Hospital"]
 		# Test to fills listbox with numbers 100-199. Delete later
-		for i in range(100):
-			self.infoListbox.insert('end', i+100)
+		for i in range(10):
+			first = self.shortenDisplay(listFirst[i], 16)
+			last = self.shortenDisplay(listLast[i], 24)
+			phone = self.shortenDisplay(listPhone[i], 16)
+			email = self.shortenDisplay(listEmail[i], 28)
+			specialty = self.shortenDisplay(listSpecialty[i], 24)
+			hospital = self.shortenDisplay(listHospital[i], 44)
+			self.infoListbox.insert('end', '{:<16} {:<24} {:<16} {:<28} {:<24} {:<44}'.format(first, last, phone, email, specialty, hospital))
 
 	def selectItem(self, item):
 
@@ -116,3 +132,14 @@ class DoctorsInfoViewer:
 
 		# Prints the index of item selected, not the actual data
 		print(self.infoListbox.curselection()) 
+
+	def shortenDisplay(self, string, length):
+		'''Given a string and a length, it shortens the word to length,
+		   with last three characters being dots (...)'''
+		if len(string) <= length:
+			return string.upper()
+
+		string = string[:length-3]
+		string += '...'
+		print(string)
+		return string.upper()

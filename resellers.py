@@ -37,9 +37,6 @@ class ResellersTab:
 		self.buttonAdd.grid(row=4, column=1, padx=1, pady=5)
 		self.buttonImport.grid(row=4, column=2, padx=1, pady=5)
 
-		# TODO: Add info-viewer for tab
-		#	- Scrollable widget
-
 		# Creates info-viewer section of tab
 		self.infoViewer = ResellersInfoViewer(tabFrame)
 
@@ -53,8 +50,12 @@ class ResellersInfoViewer:
 		self.viewerFrame = tk.Frame(frame, bg='light green')
 		self.viewerFrame.place(relx=0.02, rely=0.4, relwidth=0.96, relheight=0.58)
 
+		# Creates frame for titles
 		self.titleFrame = tk.Frame(self.viewerFrame, bg='light blue')
 		self.titleFrame.place(relwidth=1, relheight=0.06)
+
+		self.titleLabel = tk.Label(self.titleFrame, anchor='w', font= "consolas 12", text='{:<16}|{:<24}|{:<16}|{:<48}'.format("First Name", "Last Name", "Phone #", "Email"))
+		self.titleLabel.place(relwidth=1, relheight=1)
 
 		self.infoFrame = tk.Frame(self.viewerFrame, bg='pink')
 		self.infoFrame.place(rely=0.06, relwidth=1, relheight=0.94)

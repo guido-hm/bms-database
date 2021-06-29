@@ -49,9 +49,6 @@ class HospitalsTab:
 		self.buttonAdd.grid(row=6, column=1, padx=1, pady=5)
 		self.buttonImport.grid(row=6, column=2, padx=1, pady=5)
 
-		# TODO: Add info-viewer for tab
-		#	- Scrollable widget
-
 		# Creates info-viewer section of tab
 		self.infoViewer = HospitalsInfoViewer(tabFrame)
 
@@ -65,8 +62,13 @@ class HospitalsInfoViewer:
 		self.viewerFrame = tk.Frame(frame, bg='light green')
 		self.viewerFrame.place(relx=0.02, rely=0.4, relwidth=0.96, relheight=0.58)
 
+		# Creates frame for titles
 		self.titleFrame = tk.Frame(self.viewerFrame, bg='light blue')
 		self.titleFrame.place(relwidth=1, relheight=0.06)
+
+		# Creates label for titles
+		self.titleLabel = tk.Label(self.titleFrame, anchor='w', font= "consolas 12", text='{:<44}|{:<16}|{:<28}|{:<24}|{:<16}|{:<12}'.format("Name", "Phone # ", "Email", "City ", "State", "Zip"))
+		self.titleLabel.place(relwidth=1, relheight=1)
 
 		self.infoFrame = tk.Frame(self.viewerFrame, bg='pink')
 		self.infoFrame.place(rely=0.06, relwidth=1, relheight=0.94)

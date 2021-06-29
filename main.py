@@ -3,19 +3,6 @@ from tkinter import ttk
 import sqlite3 as sql
 import doctors, hospitals, others, resellers
 
-#connecting to SQLite Database using DB Browser for SQLite
-con = sql.connect("./data.db")
-cur = con.cursor()
-statement = "SELECT username, password FROM users"
-cur.execute(statement)
-print("Usernames and passwords used for testing:")
-#remove this print eventually
-print(cur.fetchall())
-
-root = tk.Tk()
-root.title("Login")
-root.geometry("300x400")
-
 class MainWindow:
 	def __init__(self, master): # Initializes to the login page
 
@@ -46,31 +33,20 @@ class MainWindow:
 		self.loginButton.place(relx=0.3, rely=0.8, relwidth=0.4, relheight=0.1)
 
 		#Error Message
-		self.ErrorLabel = tk.Label(self.loginFrame, font="Calibri 14", text="")
-		self.ErrorLabel.place(relx=0.1, rely=0.9)
+		self.ErrorLabel = tk.Label(self.loginFrame, font="Calibri 12", text="")
+		self.ErrorLabel.place(relx=0, rely=0.9, relwidth=1)
 
 
 	def Login(self, username, password):
 		""" Compares the entered password hash to the hash stored in the database.
 		If it matches, login is successful."""
 
-		# TODO: Build Function
-		#	- Figure out where usernames and passwords will be stored
-			#ANSWER: SQLite, I used DBBrowswer for SQLite
-			#Followed this tutorial: 
-			#https://compucademy.net/user-login-with-python-and-sqlite/
-		#	- Add if else statement. If login is successful, DatabaseWindow() is called.
-			#DONE
-		#	- Else, error window is displayed.
-			#DONE
-
-		# Calling DatabaseWindow with no conditional temporarily
-
 		#Verifies user input with stored usernames in Database
 		#Not encrypted but should be safe if only used locally
 
 		username = self.usernameEntry.get()
 		password = self.passwordEntry.get()
+		
 		print(username)
 		con = sql.connect("data.db")
 		cur = con.cursor()
@@ -88,12 +64,11 @@ class MainWindow:
 		self.loginFrame.destroy()
 
 		# Changes the window size
-		root.geometry("1200x650")
+		root.state("zoomed")
 
 		# Tab Control
 		self.tabControl = ttk.Notebook(self.master)
 		self.tabControl.pack(expand=1, fill="both")
-
 
 		# Doctors Tab
 		self.doctorsTabFrame = tk.Frame(self.tabControl)
@@ -104,6 +79,7 @@ class MainWindow:
 		self.hospitalsTabFrame = tk.Frame(self.tabControl)
 		self.tabControl.add(self.hospitalsTabFrame, text="Hospitals")
 		self.hospitalsTabInfo = hospitals.HospitalsTab(self.hospitalsTabFrame)
+
 
 		# Others Tab
 		self.othersTabFrame = tk.Frame(self.tabControl)
@@ -116,11 +92,30 @@ class MainWindow:
 		self.tabControl.add(self.resellersTabFrame, text="Resellers")
 		self.resellersTabInfo = resellers.ResellersTab(self.resellersTabFrame)
 
+#connecting to SQLite Database using DB Browser for SQLite
+con = sql.connect("./data.db")
+cur = con.cursor()
+Q1 = "SELECT username, password FROM users"
+cur.execute(Q1)
+print("Usernames and passwords used for testing:")
+#remove this print eventually
+print(cur.fetchall())
 
+root = tk.Tk()
+root.title("Login")
+root.geometry("300x400")
 
+screen_width = root.winfo_screenwidth()
+screen_height = root.winfo_screenheight()
 
-
+print(screen_width)
+print(screen_height)
 
 
 window = MainWindow(root)
 root.mainloop()
+
+
+# Filter for Speciality
+# Add a call log
+# Email Blast

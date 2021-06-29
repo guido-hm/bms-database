@@ -8,7 +8,7 @@ class OthersTab:
 		self.otherLastName = tk.Label(tabFrame, text="Last Name:")
 		self.otherPhone = tk.Label(tabFrame, text="Phone:")
 		self.otherEmail = tk.Label(tabFrame, text="Email:")
-		self.otherOccupation = tk.Label(tabFrame, text="Specialty:")
+		self.otherOccupation = tk.Label(tabFrame, text="Occupation:")
 		self.otherHospital = tk.Label(tabFrame, text="Hospital:")
 
 		#Create Entrys
@@ -63,9 +63,6 @@ class OthersTab:
 		self.buttonAdd.grid(row=6, column=1, padx=1, pady=5)
 		self.buttonImport.grid(row=6, column=2, padx=1, pady=5)
 
-		# TODO: Add info-viewer for tab
-		#	- Scrollable widget
-
 		# Creates info-viewer section of tab
 		self.infoViewer = OthersInfoViewer(tabFrame)
 
@@ -79,8 +76,12 @@ class OthersInfoViewer:
 		self.viewerFrame = tk.Frame(frame, bg='light green')
 		self.viewerFrame.place(relx=0.02, rely=0.4, relwidth=0.96, relheight=0.58)
 
+		# Creates frame for titles
 		self.titleFrame = tk.Frame(self.viewerFrame, bg='light blue')
 		self.titleFrame.place(relwidth=1, relheight=0.06)
+
+		self.titleLabel = tk.Label(self.titleFrame, anchor='w', font= "consolas 12", text='{:<16}|{:<24}|{:<16}|{:<28}|{:<24}|{:<44}'.format("First Name", "Last Name", "Phone #", "Email", "Occupation", "Hospital"))
+		self.titleLabel.place(relwidth=1, relheight=1)
 
 		self.infoFrame = tk.Frame(self.viewerFrame, bg='pink')
 		self.infoFrame.place(rely=0.06, relwidth=1, relheight=0.94)

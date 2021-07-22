@@ -1,19 +1,30 @@
 import tkinter as tk
 
-class ResellersTab:
+class ResellerTab:
 	def __init__(self, tabFrame):
 
 		# Create Labels
-		self.resellerFirstName = tk.Label(tabFrame, text="First Name:")
-		self.resellerLastName = tk.Label(tabFrame, text="Last Name:")
-		self.resellerPhone = tk.Label(tabFrame, text="Phone:")
-		self.resellerEmail = tk.Label(tabFrame, text="Email:")
+		self.firstName = tk.Label(tabFrame, text="First Name:")
+		self.lastName = tk.Label(tabFrame, text="Last Name:")
+		self.phone = tk.Label(tabFrame, text="Phone:")
+		self.email = tk.Label(tabFrame, text="Email:")
+		self.gender = tk.Label(tabFrame, text="Gender:")
+		self.company = tk.Label(tabFrame, text="Company:")
 
 		#Create Entrys
-		self.resellerFirstNameEntry = tk.Entry(tabFrame)
-		self.resellerLastNameEntry = tk.Entry(tabFrame)
-		self.resellerPhoneEntry = tk.Entry(tabFrame)
-		self.resellerEmailEntry = tk.Entry(tabFrame)
+		self.firstNameEntry = tk.Entry(tabFrame)
+		self.lastNameEntry = tk.Entry(tabFrame)
+		self.phoneEntry = tk.Entry(tabFrame)
+		self.emailEntry = tk.Entry(tabFrame)
+		self.genderEntry = tk.Entry(tabFrame)
+
+
+		companyList = ["Company 1", "Company 2", "Company 3", "Company 4"]
+	
+
+		self.companyVar = tk.StringVar(tabFrame)
+		self.companyVar.set("N/A")
+		self.companyOptionMenu = tk.OptionMenu(tabFrame, self.companyVar, *companyList)
 
 		#Create Buttons
 		self.buttonSearch = tk.Button(tabFrame, font="Calibri 12", text="SEARCH")
@@ -21,29 +32,35 @@ class ResellersTab:
 		self.buttonImport = tk.Button(tabFrame, font="Calibri 12", text="IMPORT")
 
 		#Add buttons onto frame using grid positioning
-		self.resellerFirstName.grid(row=0, column=0, padx=5, pady=5)
-		self.resellerFirstNameEntry.grid(row=0, column=1, padx=15, pady=5)
+		self.firstName.grid(row=0, column=0, padx=5, pady=5)
+		self.firstNameEntry.grid(row=0, column=1, padx=15, pady=5)
 
-		self.resellerLastName.grid(row=1, column=0, padx=5, pady=5)
-		self.resellerLastNameEntry.grid(row=1, column=1, padx=15, pady=5)
+		self.lastName.grid(row=1, column=0, padx=5, pady=5)
+		self.lastNameEntry.grid(row=1, column=1, padx=15, pady=5)
 
-		self.resellerPhone.grid(row=2, column=0, padx=5, pady=5)
-		self.resellerPhoneEntry.grid(row=2, column=1, padx=15, pady=5)
+		self.phone.grid(row=2, column=0, padx=5, pady=5)
+		self.phoneEntry.grid(row=2, column=1, padx=15, pady=5)
 
-		self.resellerEmail.grid(row=3, column=0, padx=5, pady=5)
-		self.resellerEmailEntry.grid(row=3, column=1, padx=15, pady=5)
+		self.email.grid(row=3, column=0, padx=5, pady=5)
+		self.emailEntry.grid(row=3, column=1, padx=15, pady=5)
 
-		self.buttonSearch.grid(row=4, column=0, padx=1, pady=5)
-		self.buttonAdd.grid(row=4, column=1, padx=1, pady=5)
-		self.buttonImport.grid(row=4, column=2, padx=1, pady=5)
+		self.gender.grid(row=4, column=0, padx=1, pady=5)
+		self.genderEntry.grid(row=4, column=1, padx=1, pady=5)
+
+		self.company.grid(row=5, column=0, padx=1, pady=5)
+		self.companyOptionMenu.grid(row=5, column=1, padx=1, pady=5)
+
+		self.buttonSearch.grid(row=6, column=0, padx=1, pady=5)
+		self.buttonAdd.grid(row=6, column=1, padx=1, pady=5)
+		self.buttonImport.grid(row=6, column=2, padx=1, pady=5)
 
 		# Creates info-viewer section of tab
-		self.infoViewer = ResellersInfoViewer(tabFrame)
+		self.infoViewer = ResellerInfoViewer(tabFrame)
 
 		# Fills listbox with info
 		self.infoViewer.populateListbox()
 
-class ResellersInfoViewer:
+class ResellerInfoViewer:
 	def __init__(self, frame):
 
 		# 3 Frames. titleFrame and contentFrame are inside viewerFrame.

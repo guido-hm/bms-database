@@ -248,7 +248,7 @@ class MainWindow:
 				print("Connected to daddysdata_login.")
 				
 				# Creates cursor for daddysdata_login database
-				cur_login = self.conn_login.cursor()
+				self.cur_login = self.conn_login.cursor()
 
 
 		return
@@ -436,21 +436,10 @@ class MainWindow:
 				self.cur_main = self.conn_main.cursor()
 
 
-
 root = tk.Tk()
 root.title("Login")
 root.geometry("300x400")
 
-# try:
-# 	conn = sql.connect('file:users.db?mode=rw', uri=True)
-# 	c = conn.cursor()
-# except:
-# 	conn = sql.connect("users.db")
-# 	c = conn.cursor()
-# 	c.execute("""CREATE TABLE users (
-# 		username TEXT NOT NULL UNIQUE,
-# 		password TEXT
-# 		)""")
 
 screen_width = root.winfo_screenwidth()
 screen_height = root.winfo_screenheight()
@@ -462,6 +451,3 @@ root.mainloop()
 # Filter for Speciality
 # Add a call log
 # Email Blast
-
-
-

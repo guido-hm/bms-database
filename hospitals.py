@@ -1,24 +1,31 @@
 import tkinter as tk
 
 
-class HospitalsTab:
+class HospitalTab:
 	def __init__(self, tabFrame):
 
 		#Create Labels
-		self.hospitalName = tk.Label(tabFrame, text="Name:")
-		self.hospitalPhone = tk.Label(tabFrame, text="Phone:")
-		self.hospitalEmail = tk.Label(tabFrame, text="Email:")
-		self.hospitalCity = tk.Label(tabFrame, text="City:")
-		self.hospitalState = tk.Label(tabFrame, text="State:")
-		self.hospitalZip = tk.Label(tabFrame, text="Zip:")
+		self.name = tk.Label(tabFrame, text="Name:")
+		self.phone = tk.Label(tabFrame, text="Phone:")
+		self.email = tk.Label(tabFrame, text="Email:")
+		self.city = tk.Label(tabFrame, text="City:")
+		self.state = tk.Label(tabFrame, text="State:")
+		self.zip = tk.Label(tabFrame, text="Zip:")
+		self.company = tk.Label(tabFrame, text="Company:")
 
 		#Create Entrys
-		self.hospitalNameEntry = tk.Entry(tabFrame)
-		self.hospitalPhoneEntry = tk.Entry(tabFrame)
-		self.hospitalEmailEntry = tk.Entry(tabFrame)
-		self.hospitalCityEntry = tk.Entry(tabFrame)
-		self.hospitalStateEntry = tk.Entry(tabFrame)
-		self.hospitalZipEntry = tk.Entry(tabFrame)
+		self.nameEntry = tk.Entry(tabFrame)
+		self.phoneEntry = tk.Entry(tabFrame)
+		self.emailEntry = tk.Entry(tabFrame)
+		self.cityEntry = tk.Entry(tabFrame)
+		self.stateEntry = tk.Entry(tabFrame)
+		self.zipEntry = tk.Entry(tabFrame)
+
+		companyList = ["Company 1", "Company 2", "Company 3", "Company 4"]
+
+		self.companyVar = tk.StringVar(tabFrame)
+		self.companyVar.set("N/A")
+		self.companyOptionMenu = tk.OptionMenu(tabFrame, self.companyVar, *companyList)
 
 		#Create Buttons
 		self.buttonSearch = tk.Button(tabFrame, font="Calibri 12", text="SEARCH")
@@ -26,36 +33,39 @@ class HospitalsTab:
 		self.buttonImport = tk.Button(tabFrame, font="Calibri 12", text="IMPORT")
 
 		#Add buttons onto frame using grid positioning
-		self.hospitalName.grid(row=0, column=0, padx=5, pady=5)
-		self.hospitalNameEntry.grid(row=0, column=1, padx=15, pady=5)
+		self.name.grid(row=0, column=0, padx=5, pady=5)
+		self.nameEntry.grid(row=0, column=1, padx=15, pady=5)
 
-		self.hospitalPhone.grid(row=1, column=0, padx=5, pady=5)
-		self.hospitalPhoneEntry.grid(row=1, column=1, padx=15, pady=5)
+		self.phone.grid(row=1, column=0, padx=5, pady=5)
+		self.phoneEntry.grid(row=1, column=1, padx=15, pady=5)
 
-		self.hospitalEmail.grid(row=2, column=0, padx=5, pady=5)
-		self.hospitalEmailEntry.grid(row=2, column=1, padx=15, pady=5)
+		self.email.grid(row=2, column=0, padx=5, pady=5)
+		self.emailEntry.grid(row=2, column=1, padx=15, pady=5)
 
-		self.hospitalCity.grid(row=3, column=0, padx=5, pady=5)
-		self.hospitalCityEntry.grid(row=3, column=1, padx=15, pady=5)
+		self.city.grid(row=3, column=0, padx=5, pady=5)
+		self.cityEntry.grid(row=3, column=1, padx=15, pady=5)
 
-		self.hospitalState.grid(row=4, column=0, padx=5, pady=5)
-		self.hospitalStateEntry.grid(row=4, column=1, padx=15, pady=5)
+		self.state.grid(row=4, column=0, padx=5, pady=5)
+		self.stateEntry.grid(row=4, column=1, padx=15, pady=5)
 
-		self.hospitalZip.grid(row=5, column=0, padx=1, pady=5)
-		self.hospitalZipEntry.grid(row=5, column=1, padx=1, pady=5)
+		self.zip.grid(row=5, column=0, padx=1, pady=5)
+		self.zipEntry.grid(row=5, column=1, padx=1, pady=5)
 		
+		self.company.grid(row=6, column=0, padx=1, pady=5)
+		self.companyOptionMenu.grid(row=6, column=1, padx=1, pady=5)
+		
+		self.buttonSearch.grid(row=7, column=0, padx=1, pady=5)
+		self.buttonAdd.grid(row=7, column=1, padx=1, pady=5)
+		self.buttonImport.grid(row=7, column=2, padx=1, pady=5)
 
-		self.buttonSearch.grid(row=6, column=0, padx=1, pady=5)
-		self.buttonAdd.grid(row=6, column=1, padx=1, pady=5)
-		self.buttonImport.grid(row=6, column=2, padx=1, pady=5)
 
 		# Creates info-viewer section of tab
-		self.infoViewer = HospitalsInfoViewer(tabFrame)
+		self.infoViewer = HospitalInfoViewer(tabFrame)
 
 		# Fills listbox with info
 		self.infoViewer.populateListbox()
 
-class HospitalsInfoViewer:
+class HospitalInfoViewer:
 	def __init__(self, frame):
 
 		# 3 Frames. titleFrame and contentFrame are inside viewerFrame.

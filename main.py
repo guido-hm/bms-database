@@ -78,7 +78,7 @@ class MainWindow:
 		else:
 			print("Login failed")
 			self.usernameEntry.delete(0, "end")
-			self.passwordEntry.delete(0, "end")			
+			self.passwordEntry.delete(0, "end")
 
 	def CreateAccountWindow(self):
 		self.newAccountWindow = tk.Toplevel()
@@ -119,6 +119,27 @@ class MainWindow:
 			password.delete(0, "end")
 			reenteredPassword.delete(0, "end")
 
+	def refreshOptionMenu(self, event):
+		
+		selected_tab = event.widget.select()
+		tab_text = event.widget.tab(selected_tab, "text")
+		print("Selected Tab: ", selected_tab, "     ", tab_text)
+
+		if tab_text == "Doctors":
+			self.doctorsTabInfo.refreshOptionMenu()
+			print("docs")
+		elif tab_text == "Hospitals":
+			self.hospitalsTabInfo.refreshOptionMenu()
+			print("hospitals")
+		elif tab_text == "Others":
+			self.othersTabInfo.refreshOptionMenu()
+			print("others")
+		elif tab_text == "Resellers":
+			self.resellersTabInfo.refreshOptionMenu()
+			print("resellers")
+		
+		return
+
 	def DatabaseWindow(self):
 
 		# Calls function to connect to Main Database
@@ -136,30 +157,32 @@ class MainWindow:
 		self.tabControl = ttk.Notebook(self.master)
 		self.tabControl.pack(expand=1, fill="both")
 
+		self.tabControl.bind("<<NotebookTabChanged>>", self.refreshOptionMenu)
+
 		# Doctors Tab
 		self.doctorsTabFrame = tk.Frame(self.tabControl)
 		self.tabControl.add(self.doctorsTabFrame, text="Doctors")
-		self.doctorsTabInfo = doctors.DoctorTab(self.doctorsTabFrame)
+		self.doctorsTabInfo = doctors.DoctorTab(self.doctorsTabFrame, self.cur_main)
 
 		# Hospitals Tab
 		self.hospitalsTabFrame = tk.Frame(self.tabControl)
 		self.tabControl.add(self.hospitalsTabFrame, text="Hospitals")
-		self.hospitalsTabInfo = hospitals.HospitalTab(self.hospitalsTabFrame)
+		self.hospitalsTabInfo = hospitals.HospitalTab(self.hospitalsTabFrame, self.cur_main)
 
 		# Others Tab
 		self.othersTabFrame = tk.Frame(self.tabControl)
 		self.tabControl.add(self.othersTabFrame, text="Others")
-		self.othersTabInfo = others.OtherTab(self.othersTabFrame)
+		self.othersTabInfo = others.OtherTab(self.othersTabFrame, self.cur_main)
 
 		# Resellers Tab
 		self.resellersTabFrame = tk.Frame(self.tabControl)
 		self.tabControl.add(self.resellersTabFrame, text="Resellers")
-		self.resellersTabInfo = resellers.ResellerTab(self.resellersTabFrame)
+		self.resellersTabInfo = resellers.ResellerTab(self.resellersTabFrame, self.cur_main)
 
 		# Companies Tab
 		self.companiesTabFrame = tk.Frame(self.tabControl)
 		self.tabControl.add(self.companiesTabFrame, text="Companies")
-		self.companiesTabInfo = companies.CompanyTab(self.companiesTabFrame)
+		self.companiesTabInfo = companies.CompanyTab(self.companiesTabFrame, self.cur_main)
 
 	def ConnectToLoginDatabase(self):
 		self.conn_login = None
@@ -174,7 +197,6 @@ class MainWindow:
 				host="localhost",
 				password="hF8$!nfshGAgxPch",
 				port=5432)
-			
 			self.conn_login.autocommit = True
 
 			print('Default Database connected.')
@@ -218,6 +240,7 @@ class MainWindow:
 					database = "daddysdata_login",
 					password ="hF8$!nfshGAgxPch",
 					port=5432)
+				self.conn_login.autocommit = True
 
 				
 				print("Connected to daddysdata_login.")
@@ -232,6 +255,7 @@ class MainWindow:
 					username VARCHAR UNIQUE,
 					password VARCHAR);""")
 
+
 			elif database_exists == True:
 				# Close cursor and connection of default database
 				self.cur_login.close()
@@ -244,6 +268,7 @@ class MainWindow:
 					database = "daddysdata_login",
 					password ="hF8$!nfshGAgxPch",
 					port=5432)
+				self.conn_login.autocommit = True
 
 				print("Connected to daddysdata_login.")
 				
@@ -282,7 +307,7 @@ class MainWindow:
 
 			main_database_name = "daddysdata"
 
-			if (main_database_name) in list_database:
+			if (main_database_name,) in list_database:
 				print("SUCCESS: '{}' database already exist".format(main_database_name))
 				database_exists = True
 			else:
@@ -305,55 +330,21 @@ class MainWindow:
 					database = "daddysdata",
 					password ="hF8$!nfshGAgxPch",
 					port=5432)
+				self.conn_main.autocommit = True
 
 				print("Connected to daddysdata.")
 
 				# Creates cursor for main database
 				self.cur_main = self.conn_main.cursor()
 
-				self.cur_main.execute("""CREATE TABLE resellers (
-					id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
-					first_name VARCHAR,
-					last_name VARCHAR,
-					email VARCHAR,
-					phone VARCHAR,
-					gender VARCHAR,
-					prefix VARCHAR, 
-					notes VARCHAR,
-					verified BOOLEAN);""")
-
-				self.cur_main.execute("""CREATE TABLE call_log_reseller (
-					id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
-					other_id INTEGER,
-					caller VARCHAR,
-					notes VARCHAR);""")
-
-				self.cur_main.execute("""CREATE TABLE hospital (
-					id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
-					name VARCHAR,
-					email VARCHAR,
-					phone VARCHAR,
-					city VARCHAR,
-					state VARCHAR,
-					zip VARCHAR,
-					notes VARCHAR,
-					verified BOOLEAN);""")
-
-				self.cur_main.execute("""CREATE TABLE call_log_hospital (
-					id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
-					other_id INTEGER,
-					caller VARCHAR,
-					answerer VARCHAR,
-					notes VARCHAR);""")
-
 				self.cur_main.execute("""CREATE TABLE company (
 					id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
 					name VARCHAR,
-					email VARCHAR,
 					phone VARCHAR,
+					email VARCHAR,
 					city VARCHAR,
 					state VARCHAR,
-					zip VARCHAR,
+					zipcode VARCHAR,
 					notes VARCHAR,
 					verified BOOLEAN);""")
 
@@ -364,16 +355,36 @@ class MainWindow:
 					answerer VARCHAR,
 					notes VARCHAR);""")
 
+				self.cur_main.execute("""CREATE TABLE hospital (
+					id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+					name VARCHAR,
+					phone VARCHAR,
+					email VARCHAR,
+					city VARCHAR,
+					state VARCHAR,
+					zipcode VARCHAR,
+					company_id INTEGER,
+					notes VARCHAR,
+					verified BOOLEAN,
+					CONSTRAINT fk_company FOREIGN KEY(company_id) REFERENCES company(id));""")
+
+				self.cur_main.execute("""CREATE TABLE call_log_hospital (
+					id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+					other_id INTEGER,
+					caller VARCHAR,
+					answerer VARCHAR,
+					notes VARCHAR);""")
+
 				self.cur_main.execute("""CREATE TABLE doctor (
 					id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
 					first_name VARCHAR,
 					last_name VARCHAR,
-					email VARCHAR,
 					phone VARCHAR,
+					email VARCHAR,
 					speciality VARCHAR,
+					gender VARCHAR,
 					hospital_id INTEGER,
 					company_id INTEGER,
-					gender VARCHAR,
 					prefix VARCHAR,
 					notes VARCHAR,
 					verified BOOLEAN,
@@ -391,12 +402,12 @@ class MainWindow:
 					id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
 					first_name VARCHAR,
 					last_name VARCHAR,
-					email VARCHAR,
 					phone VARCHAR,
+					email VARCHAR,
 					occupation VARCHAR,
+					gender VARCHAR,
 					hospital_id INTEGER,
 					company_id INTEGER,
-					gender VARCHAR,
 					prefix VARCHAR,
 					notes VARCHAR,
 					verified BOOLEAN,
@@ -416,6 +427,25 @@ class MainWindow:
 					CONSTRAINT fk_hospital FOREIGN KEY(hospital_id) REFERENCES hospital(id),
 					CONSTRAINT fk_company FOREIGN KEY(company_id) REFERENCES company(id));""")
 
+				self.cur_main.execute("""CREATE TABLE reseller (
+					id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+					first_name VARCHAR,
+					last_name VARCHAR,
+					phone VARCHAR,
+					email VARCHAR,
+					gender VARCHAR,
+					company_id INTEGER,
+					prefix VARCHAR, 
+					notes VARCHAR,
+					verified BOOLEAN,
+					CONSTRAINT fk_company FOREIGN KEY(company_id) REFERENCES company(id));""")
+
+				self.cur_main.execute("""CREATE TABLE call_log_reseller (
+					id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+					other_id INTEGER,
+					caller VARCHAR,
+					notes VARCHAR);""")
+
 				print("daddysdata database created.")
 
 			else:
@@ -429,6 +459,7 @@ class MainWindow:
 					database = "daddysdata",
 					password ="hF8$!nfshGAgxPch",
 					port=5432)
+				self.conn_main.autocommit = True
 
 				print("Connected to daddysdata.")
 

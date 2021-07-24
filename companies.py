@@ -199,6 +199,7 @@ class CompanyInfoViewer:
 
 		# Splits Listbox Info and gets only the ID
 		selected_id = item.split()[0]
+		print(selected_id)
 
 		# Fetches requested data based on ID
 		self.cur_main.execute("SELECT * FROM company WHERE id={id}".format(id=int(selected_id)))

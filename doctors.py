@@ -63,6 +63,8 @@ class DoctorTab:
 		# Creates info-viewer section of tab
 		self.infoViewer = DoctorInfoViewer(tabFrame, self.cur_main)
 
+
+
 	def createOptionMenu(self):
 		print("We are creating things!!!!")
 		# Creates list of companies for Optionmenu
@@ -259,7 +261,11 @@ class DoctorInfoViewer:
 			phone = self.shortenDisplay(doctor[3], 16)
 			email = self.shortenDisplay(doctor[4], 28)
 			speciality = self.shortenDisplay(doctor[5], 24)
-			hospital = self.shortenDisplay(doctor[7], 40)
+			hospital_tuple = self.getHospitalByID(doctor[7])
+			if hospital_tuple is None:
+				hospital = "None"
+			else:
+				hospital = self.shortenDisplay(hospital_tuple[1], 40)
 
 			# Inserts Info into ListBox
 			self.infoListbox.insert('end', '{:<10} {:<14} {:<16} {:<16} {:<28} {:<24} {:<40}'.format(id, first, last, phone, email, speciality, hospital))
@@ -279,10 +285,35 @@ class DoctorInfoViewer:
 
 		# TODO: Write function that opens new Toplevel displaying doctors data (name, email, notes, etc...)
 
-		# Prints the index of item selected, not the actual data
-		print(self.infoListbox.curselection()) 
+		# Splits Listbox Info and gets only the ID
+		selected_id = item.split()[0]
+		print(selected_id)
 
+		# Fetches requested data based on ID
+		self.cur_main.execute("SELECT * FROM doctor WHERE id={id}".format(id=int(selected_id)))
 
+	def getHospitalByID(self, ID):
+		print("ID: ", type(ID))
+		if ID is None:
+			return None
+		get_hospital_query = f"SELECT * FROM hospital WHERE id={ID}"
+		self.cur_main.execute(get_hospital_query)
+		hospital = self.cur_main.fetchone()
+		print("GETTING HOSPITAL BY ID")
+		print(hospital)
+		print(type(hospital))
+		return hospital
+		
+	def getCompanyByID(self, ID):
+		if ID is None:
+			return None
+		get_company_query = f"SELECT * FROM company WHERE id={ID}"
+		self.cur_main.execute(get_company_query)
+		company = self.cur_main.fetchone()
+		print("GETTING HOSPITAL BY ID")
+		print(company)
+		print(type(company))
+		return company
 
 	def shortenDisplay(self, string, length):
 		'''Given a string and a length, it shortens the word to length,

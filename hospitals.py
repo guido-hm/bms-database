@@ -242,9 +242,26 @@ class HospitalInfoViewer:
 
 		# TODO: Write function that opens new Toplevel displaying hospitals data (name, email, affiliated people, etc...)
 
-		# Prints the index of item selected, not the actual data
-		print(self.infoListbox.curselection()) 
+		# Splits Listbox Info and gets only the ID
+		selected_id = item.split()[0]
+		print(selected_id)
+
+		# Fetches requested data based on ID
+		self.cur_main.execute("SELECT * FROM hospital WHERE id={id}".format(id=int(selected_id)))
 	
+
+	def getCompanyByID(self, ID):
+		if ID is None:
+			return None
+		get_company_query = f"SELECT * FROM company WHERE id={ID}"
+		self.cur_main.execute(get_company_query)
+		company = self.cur_main.fetchone()
+		print("GETTING HOSPITAL BY ID")
+		print(company)
+		print(type(company))
+		return company
+
+
 	def shortenDisplay(self, string, length):
 		'''Given a string and a length, it shortens the word to length,
 		   with last three characters being dots (...)'''

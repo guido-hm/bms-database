@@ -28,7 +28,7 @@ class OtherTab:
 		self.createOptionMenu()
 
 		#Create Buttons
-		self.buttonSearch = tk.Button(tabFrame, font="Calibri 12", text="SEARCH")
+		self.buttonSearch = tk.Button(tabFrame, font="Calibri 12", text="SEARCH", command=self.searchDatabase)
 		self.buttonAdd = tk.Button(tabFrame, font="Calibri 12", text="  ADD  ", command = lambda: self.addItem(self.firstNameEntry, self.lastNameEntry, self.phoneEntry, self.emailEntry, self.occupationEntry, self.genderEntry, self.hospitalVar, self.companyVar))
 		self.buttonImport = tk.Button(tabFrame, font="Calibri 12", text="IMPORT")
 
@@ -104,6 +104,7 @@ class OtherTab:
 
 
 	def deleteOptionMenu(self):
+		self.hospitalOptionMenu.destroy()
 		self.companyOptionMenu.destroy()
 
 	def refreshOptionMenu(self):
@@ -148,7 +149,54 @@ class OtherTab:
 			company.set(None)
 
 			# Updates the infoViewer with new data
-			self.infoViewer.updateListbox()
+			self.infoViewer.updateListbox("")
+
+
+	def searchDatabase(self):
+		field_data = []
+		field_names = ["first_name", "last_name", "phone", "email", "occupation", "gender", "hospital_id", "company_id"]
+
+		# Adds user-inputted info to a list. This will be used to create query used to search for records with given parameters
+		field_data.append(self.firstNameEntry.get())
+		field_data.append(self.lastNameEntry.get())
+		field_data.append(self.phoneEntry.get())
+		field_data.append(self.emailEntry.get())
+		field_data.append(self.occupationEntry.get())
+		field_data.append(self.genderEntry.get())
+		field_data.append(self.hospitalVar.get().split()[0])
+		field_data.append(self.companyVar.get().split()[0])
+
+		# Clears entry fields after searching
+		self.firstNameEntry.delete(0,'end')
+		self.lastNameEntry.delete(0,'end')
+		self.phoneEntry.delete(0,'end')
+		self.emailEntry.delete(0,'end')
+		self.occupationEntry.delete(0,'end')
+		self.genderEntry.delete(0,'end')
+		self.hospitalVar.set(None)
+		self.companyVar.set(None)
+
+		query_conditions_list = []
+		for index in range(len(field_data)):
+			if field_data[index] and field_data[index] != "None":
+				# If search parameter is a digit (hospital, company ID or any other digit data), it does not user "UPPER" in query"
+				if field_data[index].isdigit():
+					query_conditions_list.append( f"{field_names[index]} = '{field_data[index]}'")
+				else:
+					query_conditions_list.append( f"UPPER({field_names[index]}) = UPPER('{field_data[index]}')")
+		
+		query_conditions_string = " AND ".join(query_conditions_list)
+		print(query_conditions_string)
+
+		if query_conditions_string:
+			self.infoViewer.updateListbox(query_conditions_string)
+		else:
+			self.infoViewer.updateListbox("")
+
+		# self.firstNameEntry, self.lastNameEntry, self.phoneEntry, self.emailEntry, self.specialtyEntry, self.genderEntry, self.hospitalVar, self.companyVar
+
+		return
+
 
 class OtherInfoViewer:
 	def __init__(self, frame, cursor):
@@ -186,11 +234,16 @@ class OtherInfoViewer:
 		self.infoListbox.bind('<Double-Button>', lambda x:self.selectItem(self.infoListbox.get('anchor')))
 		self.infoListbox.bind('<Return>', lambda x:self.selectItem(self.infoListbox.get('anchor')))
 
-		self.populateListbox()
+		self.populateListbox("")
 
-	def populateListbox(self):
+	def populateListbox(self, conditions):
 
-		self.cur_main.execute("SELECT * FROM other")
+		if conditions:
+			populate_query = "SELECT * FROM other WHERE " + conditions
+		else:
+			populate_query = "SELECT * FROM other"
+
+		self.cur_main.execute(populate_query)
 		other_list = self.cur_main.fetchall()
 
 		for other in other_list:
@@ -212,9 +265,9 @@ class OtherInfoViewer:
 		self.infoListbox.delete(0,'end')
 		return
 
-	def updateListbox(self):
+	def updateListbox(self, conditions):
 		self.deleteListbox()
-		self.populateListbox()
+		self.populateListbox(conditions)
 		return
 	
 

@@ -24,7 +24,7 @@ class CompanyTab:
 
 
 		#Create Buttons
-		self.buttonSearch = tk.Button(tabFrame, font="Calibri 12", text="SEARCH")
+		self.buttonSearch = tk.Button(tabFrame, font="Calibri 12", text="SEARCH", command=self.searchDatabase)
 		self.buttonAdd = tk.Button(tabFrame, font="Calibri 12", text="  ADD  ", command=lambda: self.addItem(self.nameEntry, self.phoneEntry, self.emailEntry, self.cityEntry, self.stateEntry, self.zipcodeEntry))
 		self.buttonImport = tk.Button(tabFrame, font="Calibri 12", text="IMPORT")
 
@@ -71,7 +71,49 @@ class CompanyTab:
 
 		self.cur_main.execute("SELECT * FROM company")
 
-		self.infoViewer.updateListbox()
+		self.infoViewer.updateListbox("")
+
+
+	def searchDatabase(self):
+		field_data = []
+		field_names = ["name", "phone", "email", "city", "state", "zipcode"]
+
+		# Adds user-inputted info to a list. This will be used to create query used to search for records with given parameters
+		field_data.append(self.nameEntry.get())
+		field_data.append(self.phoneEntry.get())
+		field_data.append(self.emailEntry.get())
+		field_data.append(self.cityEntry.get())
+		field_data.append(self.stateEntry.get())
+		field_data.append(self.zipcodeEntry.get())
+
+		# Clears entry fields after searching
+		self.nameEntry.delete(0,'end')
+		self.phoneEntry.delete(0,'end')
+		self.emailEntry.delete(0,'end')
+		self.cityEntry.delete(0,'end')
+		self.stateEntry.delete(0,'end')
+		self.zipcodeEntry.delete(0,'end')
+
+		query_conditions_list = []
+		for index in range(len(field_data)):
+			if field_data[index] and field_data[index] != "None":
+				# If search parameter is a digit (hospital, company ID or any other digit data), it does not user "UPPER" in query"
+				if field_data[index].isdigit():
+					query_conditions_list.append( f"{field_names[index]} = '{field_data[index]}'")
+				else:
+					query_conditions_list.append( f"UPPER({field_names[index]}) = UPPER('{field_data[index]}')")
+		
+		query_conditions_string = " AND ".join(query_conditions_list)
+		print(query_conditions_string)
+
+		if query_conditions_string:
+			self.infoViewer.updateListbox(query_conditions_string)
+		else:
+			self.infoViewer.updateListbox("")
+
+		# self.firstNameEntry, self.lastNameEntry, self.phoneEntry, self.emailEntry, self.specialtyEntry, self.genderEntry, self.hospitalVar, self.companyVar
+
+		return
 
 
 
@@ -112,11 +154,16 @@ class CompanyInfoViewer:
 		self.infoListbox.bind('<Double-Button>', lambda x:self.selectItem(self.infoListbox.get('anchor')))
 		self.infoListbox.bind('<Return>', lambda x:self.selectItem(self.infoListbox.get('anchor')))
 
-		self.populateListbox()
+		self.populateListbox("")
 
-	def populateListbox(self):
+	def populateListbox(self, conditions):
 
-		self.cur_main.execute("SELECT * FROM company")
+		if conditions:
+			populate_query = "SELECT * FROM company WHERE " + conditions
+		else:
+			populate_query = "SELECT * FROM company"
+
+		self.cur_main.execute(populate_query)
 		company_list = self.cur_main.fetchall()
 
 		for company in company_list:
@@ -137,9 +184,9 @@ class CompanyInfoViewer:
 		self.infoListbox.delete(0,'end')
 		return
 	
-	def updateListbox(self):
+	def updateListbox(self, conditions):
 		self.deleteListbox()
-		self.populateListbox()
+		self.populateListbox(conditions)
 		return
 	
 

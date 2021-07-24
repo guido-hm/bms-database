@@ -1,7 +1,10 @@
 import tkinter as tk
 
 class DoctorTab:
-	def __init__(self, tabFrame):
+	def __init__(self, tabFrame, cursor):
+
+		self.cur_main = cursor
+		self.tabFrame = tabFrame
 
 		#Create Labels
 		self.firstName = tk.Label(tabFrame, text="First Name:")
@@ -21,26 +24,12 @@ class DoctorTab:
 		self.specialtyEntry = tk.Entry(tabFrame)
 		self.genderEntry = tk.Entry(tabFrame)
 
-		# Temporary List(DELETE LATER)
-		hospitalList = ['Texas General Hospital', 'Northwest Hospital', 'Baylor Medical Center of Irving', 'Medical Center of Lewisville', 'Methodist Richardson Medical Center']
-		companyList = ["Company 1", "Company 2", "Company 3", "Company 4"]
-
-		# TODO: Fix problem
-		#	- Every time a hospital is selected, the OptionMenu takes on its size.
-		#	  This changes the width of the whole grid's column, moving all elements on that column
-		# SOLUTION IDEA: Put OptionMenu on screen using .place() rather than .grid()
-
-		self.hospitalVar = tk.StringVar(tabFrame)
-		self.hospitalVar.set(hospitalList[0])
-		self.hospitalOptionMenu = tk.OptionMenu(tabFrame, self.hospitalVar, *hospitalList)
-
-		self.companyVar = tk.StringVar(tabFrame)
-		self.companyVar.set("N/A")
-		self.companyOptionMenu = tk.OptionMenu(tabFrame, self.companyVar, *companyList)
+		# Creates hospital and company optionmenu
+		self.createOptionMenu()
 
 		#Create Buttons
 		self.buttonSearch = tk.Button(tabFrame, font="Calibri 12", text="SEARCH")
-		self.buttonAdd = tk.Button(tabFrame, font="Calibri 12", text="  ADD  ")
+		self.buttonAdd = tk.Button(tabFrame, font="Calibri 12", text="  ADD  ", command = lambda: self.addItem(self.firstNameEntry, self.lastNameEntry, self.phoneEntry, self.emailEntry, self.specialtyEntry, self.genderEntry, self.hospitalVar, self.companyVar))
 		self.buttonImport = tk.Button(tabFrame, font="Calibri 12", text="IMPORT")
 
 		#Add buttons onto frame using grid positioning
@@ -62,24 +51,106 @@ class DoctorTab:
 		self.gender.grid(row=5, column=0, padx=5, pady=5)
 		self.genderEntry.grid(row=5, column=1, padx=15, pady=5)
 
-		self.hospital.grid(row=6, column=0, padx=5, pady=5)
-		self.hospitalOptionMenu.grid(row=6, column=1, padx=15, pady=5)
+		# self.hospital.grid(row=6, column=0, padx=5, pady=5)
+		# self.hospitalOptionMenu.grid(row=6, column=1, padx=15, pady=5)
 
-		self.company.grid(row=7, column=0, padx=15, pady=5)
-		self.companyOptionMenu.grid(row=7, column=1, padx=15, pady=5)
+		# self.company.grid(row=7, column=0, padx=15, pady=5)
+		# self.companyOptionMenu.grid(row=7, column=1, padx=15, pady=5)
 
 		self.buttonSearch.grid(row=8, column=0, padx=1, pady=5)
 		self.buttonAdd.grid(row=8, column=1, padx=1, pady=5)
 		self.buttonImport.grid(row=8, column=2, padx=1, pady=5)
 
 		# Creates info-viewer section of tab
-		self.infoViewer = DoctorInfoViewer(tabFrame)
+		self.infoViewer = DoctorInfoViewer(tabFrame, self.cur_main)
 
-		# Fills listbox with info
-		self.infoViewer.populateListbox()
+	def createOptionMenu(self):
+		print("We are creating things!!!!")
+		# Creates list of companies for Optionmenu
+		companyList = [None]
+		self.cur_main.execute("SELECT id || ' ' || name FROM company")
+		id_company_pair = self.cur_main.fetchall()
+		for id_company in id_company_pair:
+			companyList.append(id_company[0])
+
+		# Creates company Optionmenu Variable
+		self.companyVar = tk.StringVar(self.tabFrame)
+		self.companyVar.set(None)
+		self.companyOptionMenu = tk.OptionMenu(self.tabFrame, self.companyVar, *companyList)
+
+		# Places company Optionmenu
+		self.company.grid(row=7, column=0, padx=15, pady=5)
+		self.companyOptionMenu.grid(row=7, column=1, padx=15, pady=5)
+
+
+
+		# Create list of hospitals for Optionmenu
+		hospitalList = [None]
+		self.cur_main.execute("SELECT id || ' ' || name FROM hospital")
+		id_hospital_pair = self.cur_main.fetchall()
+		for id_hospital in id_hospital_pair:
+			hospitalList.append(id_hospital[0])
+
+		# Creates hospital Optionmenu Variable
+		self.hospitalVar = tk.StringVar(self.tabFrame)
+		self.hospitalVar.set(None)
+		self.hospitalOptionMenu = tk.OptionMenu(self.tabFrame, self.hospitalVar, *hospitalList)
+
+		# Places hospital Optionmenu
+		self.hospital.grid(row=6, column=0, padx=5, pady=5)
+		self.hospitalOptionMenu.grid(row=6, column=1, padx=15, pady=5)
+
+	def deleteOptionMenu(self):
+		self.companyOptionMenu.destroy()
+
+	def refreshOptionMenu(self):
+		self.deleteOptionMenu()
+		self.createOptionMenu()
+
+
+	def addItem(self, first_name, last_name, phone, email, speciality, gender, hospital, company):
+			print("ADDING ITEM...")
+
+			# Checks if user included hospital for doctor
+			if hospital.get() == "None":
+				processed_hospital_id = None
+			else:
+				processed_hospital_id = hospital.get().split()[0]
+				print("This is my type")
+				print(type(processed_hospital_id))
+			# Checks if user included company for docotr
+			if company.get() == "None":
+				processed_company_id = None
+			else:
+				processed_company_id = company.get().split()[0]
+
+
+			# Query statement and data to insert hospital info if there is no company on file for it
+			insert_query = "INSERT INTO doctor (first_name, last_name, phone, email, speciality, gender, hospital_id, company_id, prefix, notes, verified, do_not_call) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+			insert_data = (first_name.get(), last_name.get(), phone.get(), email.get(), speciality.get(), gender.get(), processed_hospital_id, processed_company_id, "Dr.", "", True, False)
+
+			# Execute querty statement with data
+			self.cur_main.execute(insert_query, insert_data)
+
+			# Deletes the entry field input to allow new entry
+			first_name.delete(0, "end")
+			last_name.delete(0, "end")
+			phone.delete(0, "end")
+			email.delete(0, "end")
+			speciality.delete(0, "end")
+			gender.delete(0, "end")
+
+			# Sets hospital and company Optionmenu to None to allow new entry
+			hospital.set(None)
+			company.set(None)
+
+			# Updates the infoViewer with new data
+			self.infoViewer.updateListbox()
 
 class DoctorInfoViewer:
-	def __init__(self, frame):
+	def __init__(self, frame, cursor):
+
+		self.cur_main = cursor
 
 		## Each character of font "consolas 12" takes up 9 pixels. 
 		## This info can be used to later create a window that works on any screen size by getting ratios
@@ -93,7 +164,7 @@ class DoctorInfoViewer:
 		self.titleFrame.place(relwidth=1, relheight=0.06)
 
 		# Creates label for titles
-		self.titleLabel = tk.Label(self.titleFrame, anchor='w', font= "consolas 12", text='{:<16}|{:<24}|{:<16}|{:<28}|{:<24}|{:<44}'.format("First Name", "Last Name", "Phone #", "Email", "Specialty", "Hospital"))
+		self.titleLabel = tk.Label(self.titleFrame, anchor='w', font= "consolas 12", text='{:<10}|{:<14}|{:<16}|{:<16}|{:<28}|{:<24}|{:<40}'.format("ID", "First Name", "Last Name", "Phone #", "Email", "Specialty", "Hospital"))
 		self.titleLabel.place(relwidth=1, relheight=1)
 
 		# Creates frame for info
@@ -117,26 +188,40 @@ class DoctorInfoViewer:
 		self.infoListbox.bind('<Double-Button>', lambda x:self.selectItem(self.infoListbox.get('anchor')))
 		self.infoListbox.bind('<Return>', lambda x:self.selectItem(self.infoListbox.get('anchor')))
 
+		# Fills infoViewer with info
+		self.populateListbox()
+
 	def populateListbox(self):
 
 		# TODO: Write function to fill in listbox with doctors data. Everything currently in here is temporary.
 		# Example on how to fill in data:
 		#	- myListbox.insert('end', '{:<14} {:<13} {:<5} {:<5} {:<5} {:<5}'.format(first, last, email, phone, specialty, hospital))
-		listFirst = ['Alberto', 'Roman', 'Guido', 'Joe', 'Alejandro Roberto', 'Guidwardo', 'Gabriel', 'Garbanzo', 'Araseli', 'Maria Jose']
-		listLast = ['Gonzalez', "Martinez", "Herrera", "Trejo", "Feroz", 'Herraduramistico', 'Trejo', 'De La Ensalada', 'La Mera Mera', 'La Chava']
-		listPhone = ["9565344764", "9565385939", "8999345781", "1234567890", "2439046372", "7783923453", "1528992847168", "3944630432", "0987654321", "9345743453"]
-		listEmail = ["gonzalberto@gmail.com", "romanisgay@yahoo.com", "guidohm@tamu.edu", "joe@hotmail.com", "alerob123@gmail.com", "guidwardo@gmail.com", "gabe@gmail.com", "garbanzo234@elpolloloco.com", "ara@domain.com", "lachava@hotmail.com"]
-		listSpecialty = ["Cardiologists", "Deeznotolist", "Ortopologist", "Dentist", "Cardiologists", "Cardiologists", "Genetisist", "Nurse", "Deeznotolist" ,"Cardiologists"]
-		listHospital = ["Hospital San Andres de la Guardia en La Santa Cruz Aveztruz", "Star Childrens Hospital Dallas", "MAC Hospital Mexico City", "Texas General Hospital", "Northwest Hospital", "Baylor Medical Center of Irving", "Medical Center of Lewisville", "Methodist Richardson Medical Center", "Catholic District of People Hospital", "Putos Se La Come Northwestern Hospital"]
-		# Test to fills listbox with numbers 100-199. Delete later
-		for i in range(10):
-			first = self.shortenDisplay(listFirst[i], 16)
-			last = self.shortenDisplay(listLast[i], 24)
-			phone = self.shortenDisplay(listPhone[i], 16)
-			email = self.shortenDisplay(listEmail[i], 28)
-			specialty = self.shortenDisplay(listSpecialty[i], 24)
-			hospital = self.shortenDisplay(listHospital[i], 44)
-			self.infoListbox.insert('end', '{:<16} {:<24} {:<16} {:<28} {:<24} {:<44}'.format(first, last, phone, email, specialty, hospital))
+		
+		self.cur_main.execute("SELECT * from doctor")
+		doctor_list = self.cur_main.fetchall()
+
+		for doctor in doctor_list:
+			id = doctor[0]
+			first = self.shortenDisplay(doctor[1], 14)
+			last = self.shortenDisplay(doctor[2], 16)
+			phone = self.shortenDisplay(doctor[3], 16)
+			email = self.shortenDisplay(doctor[4], 28)
+			speciality = self.shortenDisplay(doctor[5], 24)
+			hospital = self.shortenDisplay(doctor[7], 40)
+
+			# Inserts Info into ListBox
+			self.infoListbox.insert('end', '{:<10} {:<14} {:<16} {:<16} {:<28} {:<24} {:<40}'.format(id, first, last, phone, email, speciality, hospital))
+
+	
+	def deleteListbox(self):
+		self.infoListbox.delete(0,'end')
+		return
+
+	def updateListbox(self):
+		self.deleteListbox()
+		self.populateListbox()
+		return
+	
 
 	def selectItem(self, item):
 
@@ -148,6 +233,9 @@ class DoctorInfoViewer:
 	def shortenDisplay(self, string, length):
 		'''Given a string and a length, it shortens the word to length,
 		   with last three characters being dots (...)'''
+
+		string = str(string)
+
 		if len(string) <= length:
 			return string.upper()
 
@@ -155,3 +243,5 @@ class DoctorInfoViewer:
 		string += '...'
 		print(string)
 		return string.upper()
+
+	

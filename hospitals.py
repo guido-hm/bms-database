@@ -293,3 +293,6 @@ class HospitalInfoViewer:
 		return string.upper()
 
 # Test 2 (On Master Branch)
+=======
+# Test Comment for GIT commit and push. Delete afterwards
+

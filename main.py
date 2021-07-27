@@ -74,7 +74,7 @@ class MainWindow:
 			print("Welcome")
 			self.cur_login.close()
 			self.conn_login.close()
-			self.DatabaseWindow()
+			self.DatabaseMainWindow()
 		else:
 			print("Login failed")
 			self.usernameEntry.delete(0, "end")
@@ -140,7 +140,7 @@ class MainWindow:
 		
 		return
 
-	def DatabaseWindow(self):
+	def DatabaseMainWindow(self):
 
 		# Calls function to connect to Main Database
 		self.ConnectToMainDatabase()

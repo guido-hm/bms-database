@@ -188,6 +188,7 @@ class ResellerInfoViewer:
 		self.infoListbox.bind('<Double-Button>', lambda x:self.selectItem(self.infoListbox.get('anchor')))
 		self.infoListbox.bind('<Return>', lambda x:self.selectItem(self.infoListbox.get('anchor')))
 
+		self.selection = 0
 		# Fills listbox with info
 		self.populateListbox("")
 
@@ -210,7 +211,11 @@ class ResellerInfoViewer:
 			last = self.shortenDisplay(reseller[2], 16)
 			phone = self.shortenDisplay(reseller[3], 16)
 			email = self.shortenDisplay(reseller[4], 28)
-			company = self.shortenDisplay(reseller[6], 62)
+			company_tuple = self.getCompanyByID(reseller[6])
+			if company_tuple is None:
+				company = "None"
+			else:
+				company = self.shortenDisplay(company_tuple[1], 62)
 
 			# Inserts Info into ListBox
 			self.infoListbox.insert('end', '{:<10} {:<14} {:<16} {:<16} {:<28} {:<62}'.format(id, first, last, phone, email, company))
@@ -226,14 +231,45 @@ class ResellerInfoViewer:
 		self.populateListbox(condiitons)
 		return
 	
+	def getSelectedItemsID(self, text):
+		selected_id = text.split()[0]
+		return selected_id
+	
+	def getSelectedItemData(self, ID):
+		select_query = f"SELECT * FROM reseller WHERE id={ID}"
+		self.cur_main.execute(select_query)
+		selected_item_data = self.cur_main.fetchone()
+		
+		return selected_item_data
 
 	def selectItem(self, item):
 
-		# TODO: Write function that opens new Toplevel displaying resellers data (name, email, catalogs, etc...)
+		# Gets Index of selected cell
+		current_line_index = self.infoListbox.curselection()
+		print("Cur Line: ", current_line_index[0])
+		
+		# Gets text of cell in index given by current_line_index
+		item_text = self.infoListbox.get(current_line_index)
 
-		# Prints the index of item selected, not the actual data
-		print(self.infoListbox.curselection()) 
+		# Gets ID of item
+		ID = self.getSelectedItemsID(item_text)
 
+		# Gets data of selected item using ID
+		selected_item_data = self.getSelectedItemData(ID)
+
+		# Creates Toplevel window using data of item selected
+		self.data_window = DataWindow(selected_item_data, self.cur_main)
+
+	def getCompanyByID(self, ID):
+		if ID is None:
+			return None
+		get_company_query = f"SELECT * FROM company WHERE id={ID}"
+		self.cur_main.execute(get_company_query)
+		company = self.cur_main.fetchone()
+		print("GETTING HOSPITAL BY ID")
+		print(company)
+		print(type(company))
+		return company
 
 	def shortenDisplay(self, string, length):
 		'''Given a string and a length, it shortens the word to length,

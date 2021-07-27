@@ -254,7 +254,11 @@ class OtherInfoViewer:
 			phone = self.shortenDisplay(other[3], 16)
 			email = self.shortenDisplay(other[4], 28)
 			occupation = self.shortenDisplay(other[5], 24)
-			hospital = self.shortenDisplay(other[7], 40)
+			hospital_tuple = self.getHospitalByID(other[7])
+			if hospital_tuple is None:
+				hospital = "None"
+			else:
+				hospital = self.shortenDisplay(hospital_tuple[1], 40) 
 
 			# Inserts Info into ListBox
 			self.infoListbox.insert('end', '{:<10} {:<14} {:<16} {:<16} {:<28} {:<24} {:<40}'.format(id, first, last, phone, email, occupation, hospital))
@@ -271,12 +275,60 @@ class OtherInfoViewer:
 		return
 	
 
+	def getSelectedItemsID(self, text):
+		selected_id = text.split()[0]
+		return selected_id
+	
+	def getSelectedItemData(self, ID):
+		select_query = f"SELECT * FROM other WHERE id={ID}"
+		self.cur_main.execute(select_query)
+		selected_item_data = self.cur_main.fetchone()
+		
+		return selected_item_data
+
 	def selectItem(self, item):
 
-		# TODO: Write function that opens new Toplevel displaying peoples(others) data (name, email, notes, etc...)
+		# Gets Index of selected cell
+		current_line_index = self.infoListbox.curselection()
+		print("Cur Line: ", current_line_index[0])
+		
+		# Gets text of cell in index given by current_line_index
+		item_text = self.infoListbox.get(current_line_index)
 
-		# Prints the index of item selected, not the actual data
-		print(self.infoListbox.curselection()) 
+		# Gets ID of item
+		ID = self.getSelectedItemsID(item_text)
+
+		# Gets data of selected item using ID
+		selected_item_data = self.getSelectedItemData(ID)
+
+		# Creates Toplevel window using data of item selected
+		self.data_window = DataWindow(selected_item_data, self.cur_main)
+
+
+	def getHospitalByID(self, ID):
+		print("ID: ", type(ID))
+		if ID is None:
+			return None
+		get_hospital_query = f"SELECT * FROM hospital WHERE id={ID}"
+		self.cur_main.execute(get_hospital_query)
+		hospital = self.cur_main.fetchone()
+		print("GETTING HOSPITAL BY ID")
+		print(hospital)
+		print(type(hospital))
+		return hospital
+
+	def getCompanyByID(self, ID):
+		if ID is None:
+			return None
+		get_company_query = f"SELECT * FROM company WHERE id={ID}"
+		self.cur_main.execute(get_company_query)
+		company = self.cur_main.fetchone()
+		print("GETTING HOSPITAL BY ID")
+		print(company)
+		print(type(company))
+		return company
+
+
 
 	def shortenDisplay(self, string, length):
 		'''Given a string and a length, it shortens the word to length,

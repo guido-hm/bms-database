@@ -63,8 +63,6 @@ class DoctorTab:
 		# Creates info-viewer section of tab
 		self.infoViewer = DoctorInfoViewer(tabFrame, self.cur_main)
 
-
-
 	def createOptionMenu(self):
 		print("We are creating things!!!!")
 		# Creates list of companies for Optionmenu
@@ -189,7 +187,6 @@ class DoctorTab:
 			self.infoViewer.updateListbox("")
 
 		return
-
 	
 	def importData():
 		return
@@ -279,18 +276,35 @@ class DoctorInfoViewer:
 		self.deleteListbox()
 		self.populateListbox(conditions)
 		return
+
+	def getSelectedItemsID(self, text):
+		selected_id = text.split()[0]
+		return selected_id
 	
+	def getSelectedItemData(self, ID):
+		select_query = f"SELECT * FROM doctor WHERE id={ID}"
+		self.cur_main.execute(select_query)
+		selected_item_data = self.cur_main.fetchone()
+		
+		return selected_item_data
 
 	def selectItem(self, item):
 
-		# TODO: Write function that opens new Toplevel displaying doctors data (name, email, notes, etc...)
+		# Gets Index of selected cell
+		current_line_index = self.infoListbox.curselection()
+		print("Cur Line: ", current_line_index[0])
+		
+		# Gets text of cell in index given by current_line_index
+		item_text = self.infoListbox.get(current_line_index)
 
-		# Splits Listbox Info and gets only the ID
-		selected_id = item.split()[0]
-		print(selected_id)
+		# Gets ID of item
+		ID = self.getSelectedItemsID(item_text)
 
-		# Fetches requested data based on ID
-		self.cur_main.execute("SELECT * FROM doctor WHERE id={id}".format(id=int(selected_id)))
+		# Gets data of selected item using ID
+		selected_item_data = self.getSelectedItemData(ID)
+
+		# Creates Toplevel window using data of item selected
+		self.data_window = DataWindow(selected_item_data, self.cur_main)
 
 	def getHospitalByID(self, ID):
 		print("ID: ", type(ID))
@@ -303,7 +317,7 @@ class DoctorInfoViewer:
 		print(hospital)
 		print(type(hospital))
 		return hospital
-		
+
 	def getCompanyByID(self, ID):
 		if ID is None:
 			return None
@@ -330,3 +344,86 @@ class DoctorInfoViewer:
 		return string.upper()
 
 	
+class DataWindow:
+	def __init__(self, data, cursor):
+		self.window = tk.Toplevel()
+		self.window.state("zoomed")
+
+		self.buttonFrame = tk.Frame(self.window)
+		self.infoFrame = tk.Frame(self.window, bg='light green')
+		self.notesFrame = tk.Frame(self.window, bg='light blue')
+		self.callLogFrame = tk.Frame(self.window, bg="pink")
+
+		self.buttonFrame.place(relx=0.025, rely=0.85, relwidth=0.95, relheight=0.1)
+		self.infoFrame.place(relx=0.025, rely=0.1, relwidth=0.25, relheight=0.7)
+		self.notesFrame.place(relx=0.3, rely=0.1, relwidth=0.4, relheight=0.7)
+		self.callLogFrame.place(relx=0.725, rely=0.1, relwidth=0.25, relheight=0.7)
+
+		# INFO FRAME
+
+		#Create Labels
+		self.firstName = tk.Label(self.infoFrame, text="First Name:", bg='red', font="Calibri 16")
+		self.lastName = tk.Label(self.infoFrame, text="Last Name:", font="Calibri 16")
+		self.phone = tk.Label(self.infoFrame, text="Phone:", font="Calibri 16")
+		self.email = tk.Label(self.infoFrame, text="Email:", font="Calibri 16")
+		self.specialty = tk.Label(self.infoFrame, text="Specialty:", font="Calibri 16")
+		self.gender = tk.Label(self.infoFrame, text="Gender:", font="Calibri 16")
+		self.hospital = tk.Label(self.infoFrame, text="Hospital:", font="Calibri 16")
+		self.company = tk.Label(self.infoFrame, text="Company:", font="Calibri 16")
+
+		#Create Entrys
+		self.firstNameEntry = tk.Entry(self.infoFrame, width=20, font="Calibri 16")
+		self.lastNameEntry = tk.Entry(self.infoFrame, width=20, font="Calibri 16")
+		self.phoneEntry = tk.Entry(self.infoFrame, width=20, font="Calibri 16")
+		self.emailEntry = tk.Entry(self.infoFrame, width=20, font="Calibri 16")
+		self.specialtyEntry = tk.Entry(self.infoFrame, width=20, font="Calibri 16")
+		self.genderEntry = tk.Entry(self.infoFrame, width=20, font="Calibri 16")
+
+		# Create Buttons
+		self.toggleEditButton = tk.Button(self.infoFrame, text="Toggle Edit", font="Calibri 16", bg="light gray")
+		self.saveButton = tk.Button(self.infoFrame, text="Save", font="Calibri 16", bg="light gray", width=20)
+
+		# Places labels and entries
+		self.firstName.grid(row=0, column=0, padx=5, pady=15, sticky="E")
+		self.firstNameEntry.grid(row=0, column=1, padx=15, pady=5)
+
+		self.lastName.grid(row=1, column=0, padx=5, pady=15, sticky="E")
+		self.lastNameEntry.grid(row=1, column=1, padx=15, pady=5)
+
+		self.phone.grid(row=2, column=0, padx=5, pady=15, sticky="E")
+		self.phoneEntry.grid(row=2, column=1, padx=15, pady=5)
+
+		self.email.grid(row=3, column=0, padx=5, pady=15, sticky="E")
+		self.emailEntry.grid(row=3, column=1, padx=15, pady=5)
+
+		self.specialty.grid(row=4, column=0, padx=5, pady=15, sticky="E")
+		self.specialtyEntry.grid(row=4, column=1, padx=15, pady=5)
+
+		self.gender.grid(row=5, column=0, padx=5, pady=15, sticky="E")
+		self.genderEntry.grid(row=5, column=1, padx=15, pady=5)
+
+		self.hospital.grid(row=6, column=0, padx=5, pady=15, sticky="E")
+
+		self.company.grid(row=7, column=0, padx=5, pady=15, sticky="E")
+
+		# Place Buttons
+		self.toggleEditButton.grid(row=8, column=0, padx=5, pady=15)
+		self.saveButton.grid(row=8, column=1, padx=5, pady=15)
+
+		# BUTTON FRAME
+		self.closeButton = tk.Button(self.buttonFrame, text="Close", font="Calibri 16", bg="light gray", command=self.window.destroy)
+
+		self.closeButton.place(relx=0, rely=0.05, relwidth=1, relheight=0.9)
+
+		# NOTES FRAME
+		self.notesTextBox = tk.Text(self.notesFrame)
+
+		self.notesTextBox.place(relx=0.02, rely=0.02, relwidth=0.96, relheight=0.96)
+
+		# CALL LOG FRAME
+
+	def saveInfo(self):
+		return
+	
+	def toggleEdit(self):
+		return

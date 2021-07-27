@@ -237,18 +237,34 @@ class HospitalInfoViewer:
 		self.populateListbox(conditions)
 		return
 	
+	def getSelectedItemsID(self, text):
+		selected_id = text.split()[0]
+		return selected_id
+	
+	def getSelectedItemData(self, ID):
+		select_query = f"SELECT * FROM hospital WHERE id={ID}"
+		self.cur_main.execute(select_query)
+		selected_item_data = self.cur_main.fetchone()
+		
+		return selected_item_data
 
 	def selectItem(self, item):
 
-		# TODO: Write function that opens new Toplevel displaying hospitals data (name, email, affiliated people, etc...)
+		# Gets Index of selected cell
+		current_line_index = self.infoListbox.curselection()
+		print("Cur Line: ", current_line_index[0])
+		
+		# Gets text of cell in index given by current_line_index
+		item_text = self.infoListbox.get(current_line_index)
 
-		# Splits Listbox Info and gets only the ID
-		selected_id = item.split()[0]
-		print(selected_id)
+		# Gets ID of item
+		ID = self.getSelectedItemsID(item_text)
 
-		# Fetches requested data based on ID
-		self.cur_main.execute("SELECT * FROM hospital WHERE id={id}".format(id=int(selected_id)))
-	
+		# Gets data of selected item using ID
+		selected_item_data = self.getSelectedItemData(ID)
+
+		# Creates Toplevel window using data of item selected
+		self.data_window = DataWindow(selected_item_data, self.cur_main)
 
 	def getCompanyByID(self, ID):
 		if ID is None:

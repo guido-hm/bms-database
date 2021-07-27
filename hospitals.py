@@ -291,3 +291,5 @@ class HospitalInfoViewer:
 		string += '...'
 		print(string)
 		return string.upper()
+
+# Test Comment for GIT commit and push. Delete afterwards

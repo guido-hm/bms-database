@@ -250,6 +250,8 @@ class DoctorInfoViewer:
 
 		self.cur_main.execute(populate_query)
 		doctor_list = self.cur_main.fetchall()
+		print("\n\n\nTHIS IS THE DOCTOR LIST:\n\n\n")
+		print(doctor_list)
 
 		for doctor in doctor_list:
 			id = doctor[0]
@@ -304,7 +306,8 @@ class DoctorInfoViewer:
 		selected_item_data = self.getSelectedItemData(ID)
 
 		# Creates Toplevel window using data of item selected
-		self.data_window = DataWindow(selected_item_data, self.cur_main)
+		self.data_window = DataWindow(selected_item_data, self.cur_main, self)
+
 
 	def getHospitalByID(self, ID):
 		print("ID: ", type(ID))
@@ -345,25 +348,34 @@ class DoctorInfoViewer:
 
 	
 class DataWindow:
-	def __init__(self, data, cursor):
+	def __init__(self, data, cursor, main_tab):
+		
+		self.data = data
+		self.cur_main = cursor
+
+		self.main_tab = main_tab
+
 		self.window = tk.Toplevel()
 		self.window.state("zoomed")
 
-		self.buttonFrame = tk.Frame(self.window)
-		self.infoFrame = tk.Frame(self.window, bg='light green')
-		self.notesFrame = tk.Frame(self.window, bg='light blue')
-		self.callLogFrame = tk.Frame(self.window, bg="pink")
+		self.buttonFrame = tk.Frame(self.window, highlightbackground="black", highlightthickness=1)
+		self.infoFrame = tk.Frame(self.window, highlightbackground="black", highlightthickness=1)
+		self.notesFrame = tk.Frame(self.window, highlightbackground="black", highlightthickness=1)
+		self.callLogFrame = tk.Frame(self.window, highlightbackground="black", highlightthickness=1)
 
 		self.buttonFrame.place(relx=0.025, rely=0.85, relwidth=0.95, relheight=0.1)
 		self.infoFrame.place(relx=0.025, rely=0.1, relwidth=0.25, relheight=0.7)
 		self.notesFrame.place(relx=0.3, rely=0.1, relwidth=0.4, relheight=0.7)
 		self.callLogFrame.place(relx=0.725, rely=0.1, relwidth=0.25, relheight=0.7)
 
-		# INFO FRAME
+		##############
+		# INFO FRAME #
+		##############
 
 		#Create Labels
-		self.firstName = tk.Label(self.infoFrame, text="First Name:", bg='red', font="Calibri 16")
+		self.firstName = tk.Label(self.infoFrame, text="First Name:", font="Calibri 16")
 		self.lastName = tk.Label(self.infoFrame, text="Last Name:", font="Calibri 16")
+		self.prefix = tk.Label(self.infoFrame, text="Prefix:", font="Calibri 16")
 		self.phone = tk.Label(self.infoFrame, text="Phone:", font="Calibri 16")
 		self.email = tk.Label(self.infoFrame, text="Email:", font="Calibri 16")
 		self.specialty = tk.Label(self.infoFrame, text="Specialty:", font="Calibri 16")
@@ -372,61 +384,293 @@ class DataWindow:
 		self.company = tk.Label(self.infoFrame, text="Company:", font="Calibri 16")
 
 		#Create Entrys
-		self.firstNameEntry = tk.Entry(self.infoFrame, width=20, font="Calibri 16")
-		self.lastNameEntry = tk.Entry(self.infoFrame, width=20, font="Calibri 16")
-		self.phoneEntry = tk.Entry(self.infoFrame, width=20, font="Calibri 16")
-		self.emailEntry = tk.Entry(self.infoFrame, width=20, font="Calibri 16")
-		self.specialtyEntry = tk.Entry(self.infoFrame, width=20, font="Calibri 16")
-		self.genderEntry = tk.Entry(self.infoFrame, width=20, font="Calibri 16")
+		self.firstNameEntry = tk.Entry(self.infoFrame, width=20, font="Calibri 16", readonlybackground="#CBCBCB")
+		self.lastNameEntry = tk.Entry(self.infoFrame, width=20, font="Calibri 16", readonlybackground="#CBCBCB")
+		self.prefixEntry = tk.Entry(self.infoFrame, width=20, font="Calibri 16", readonlybackground="#CBCBCB")
+		self.phoneEntry = tk.Entry(self.infoFrame, width=20, font="Calibri 16", readonlybackground="#CBCBCB")
+		self.emailEntry = tk.Entry(self.infoFrame, width=20, font="Calibri 16", readonlybackground="#CBCBCB")
+		self.specialtyEntry = tk.Entry(self.infoFrame, width=20, font="Calibri 16", readonlybackground="#CBCBCB")
+		self.genderEntry = tk.Entry(self.infoFrame, width=20, font="Calibri 16", readonlybackground="#CBCBCB")
+		self.hospitalEntry = tk.Entry(self.infoFrame, width=20, font="Calibri 16", readonlybackground="#CBCBCB")
+		self.companyEntry = tk.Entry(self.infoFrame, width=20, font="Calibri 16", readonlybackground="#CBCBCB")
 
-		# Create Buttons
-		self.toggleEditButton = tk.Button(self.infoFrame, text="Toggle Edit", font="Calibri 16", bg="light gray")
-		self.saveButton = tk.Button(self.infoFrame, text="Save", font="Calibri 16", bg="light gray", width=20)
+		# Fill in Entryboxes
+		self.firstNameEntry.insert(0, self.data[1])
+		self.lastNameEntry.insert(0, self.data[2])
+		self.prefixEntry.insert(0, self.data[9])
+		self.phoneEntry.insert(0, self.data[3])
+		self.emailEntry.insert(0, self.data[4])
+		self.specialtyEntry.insert(0, self.data[5])
+		self.genderEntry.insert(0, self.data[6])
+
+		hospital_tuple = self.getHospitalByID(self.data[7])
+		if hospital_tuple is None:
+			self.hospitalName = "None"
+			self.hospitalEntry.insert(0, self.hospitalName)
+		else:
+			self.hospitalName = hospital_tuple[1]
+			self.hospitalEntry.insert(0,self.hospitalName)
+
+		company_tuple = self.getCompanyByID(self.data[8])
+		if company_tuple is None:
+			self.companyName = "None"
+			self.companyEntry.insert(0, self.companyName)
+		else:
+			self.companyName = company_tuple[1]
+			self.companyEntry.insert(0, self.companyName)
+
+
+		# This variable is used to determine which state all entryboxes are currently in
+		# 0 means they are in readonly. 1 means they are editable
+		self.stateInfo = 0
+		# Set Entries to readonly
+		self.firstNameEntry.config(state="readonly")
+		self.lastNameEntry.config(state="readonly")
+		self.prefixEntry.config(state="readonly")
+		self.phoneEntry.config(state="readonly")
+		self.emailEntry.config(state="readonly")
+		self.specialtyEntry.config(state="readonly")
+		self.genderEntry.config(state="readonly")
+		self.hospitalEntry.config(state="readonly")
+		self.companyEntry.config(state="readonly")
+
+		# Hospital and Company use Entry when in "readonly" mode, but use an Optionmenu when editing. Both are created, but only one is shown at a time
+		# When one is placed, the other is hidden. Then they switch when "Toggle Edit" Button is pressed
+
+		# Hospital Optionmenu created
+		hospitalList = [None]
+		self.cur_main.execute("SELECT id || ' ' || name FROM hospital")
+		self.id_hospital_pair = self.cur_main.fetchall()
+		for id_hospital in self.id_hospital_pair:
+			hospitalList.append(id_hospital[0])
+
+		self.hospitalVar = tk.StringVar(self.infoFrame)
+		self.hospitalVar.set(self.hospitalName)
+		self.hospitalOptionmenu = tk.OptionMenu(self.infoFrame, self.hospitalVar, *hospitalList)
+		self.hospitalOptionmenu.config(width=18)
+		self.hospitalOptionmenu.config(font='Calibri 14')
+
+
+		# Company Optionmenu created
+		companyList = [None]
+		self.cur_main.execute("SELECT id || ' ' || name FROM company")
+		self.id_company_pair = self.cur_main.fetchall()
+		for id_company in self.id_company_pair:
+			companyList.append(id_company[0])
+
+		self.companyVar = tk.StringVar(self.infoFrame)
+		self.companyVar.set(self.companyName)
+		self.companyOptionmenu = tk.OptionMenu(self.infoFrame, self.companyVar, *companyList)
+		self.companyOptionmenu.config(width=18)
+		self.companyOptionmenu.config(font='Calibri 14')
+
 
 		# Places labels and entries
-		self.firstName.grid(row=0, column=0, padx=5, pady=15, sticky="E")
-		self.firstNameEntry.grid(row=0, column=1, padx=15, pady=5)
+		self.firstName.grid(row=0, column=0, padx=5, pady=11, sticky="E",)
+		self.firstNameEntry.grid(row=0, column=1, padx=5, pady=11)
 
-		self.lastName.grid(row=1, column=0, padx=5, pady=15, sticky="E")
-		self.lastNameEntry.grid(row=1, column=1, padx=15, pady=5)
+		self.lastName.grid(row=1, column=0, padx=5, pady=11, sticky="E")
+		self.lastNameEntry.grid(row=1, column=1, padx=5, pady=11)
 
-		self.phone.grid(row=2, column=0, padx=5, pady=15, sticky="E")
-		self.phoneEntry.grid(row=2, column=1, padx=15, pady=5)
+		self.prefix.grid(row=2, column=0, padx=5, pady=11, sticky="E")
+		self.prefixEntry.grid(row=2, column=1, padx=5, pady=11, sticky="E")
 
-		self.email.grid(row=3, column=0, padx=5, pady=15, sticky="E")
-		self.emailEntry.grid(row=3, column=1, padx=15, pady=5)
+		self.phone.grid(row=3, column=0, padx=5, pady=11, sticky="E")
+		self.phoneEntry.grid(row=3, column=1, padx=5, pady=11)
 
-		self.specialty.grid(row=4, column=0, padx=5, pady=15, sticky="E")
-		self.specialtyEntry.grid(row=4, column=1, padx=15, pady=5)
+		self.email.grid(row=4, column=0, padx=5, pady=11, sticky="E")
+		self.emailEntry.grid(row=4, column=1, padx=5, pady=11)
 
-		self.gender.grid(row=5, column=0, padx=5, pady=15, sticky="E")
-		self.genderEntry.grid(row=5, column=1, padx=15, pady=5)
+		self.specialty.grid(row=5, column=0, padx=5, pady=11, sticky="E")
+		self.specialtyEntry.grid(row=5, column=1, padx=5, pady=11)
 
-		self.hospital.grid(row=6, column=0, padx=5, pady=15, sticky="E")
+		self.gender.grid(row=6, column=0, padx=5, pady=11, sticky="E")
+		self.genderEntry.grid(row=6, column=1, padx=5, pady=11)
 
-		self.company.grid(row=7, column=0, padx=5, pady=15, sticky="E")
+		self.hospital.grid(row=7, column=0, padx=5, pady=11, sticky="E")
+		self.hospitalEntry.grid(row=7, column=1, padx=5, pady=11, sticky="E")
 
+		self.company.grid(row=8, column=0, padx=5, pady=11, sticky="E")
+		self.companyEntry.grid(row=8, column=1, padx=5, pady=11, sticky="E")
+
+		# Create Buttons
+		self.toggleEditInfoButton = tk.Button(self.infoFrame, text="Toggle Edit", font="Calibri 16", bg="light yellow", command=self.toggleInfoEdit)
 		# Place Buttons
-		self.toggleEditButton.grid(row=8, column=0, padx=5, pady=15)
-		self.saveButton.grid(row=8, column=1, padx=5, pady=15)
+		self.toggleEditInfoButton.place(relx=0.35, rely=0.9, relwidth=0.3, relheight=0.08)
+
 
 		# BUTTON FRAME
-		self.closeButton = tk.Button(self.buttonFrame, text="Close", font="Calibri 16", bg="light gray", command=self.window.destroy)
-
+		self.closeButton = tk.Button(self.buttonFrame, text="Close", font="Calibri 16", bg="light gray", command=self.closeWindow)
 		self.closeButton.place(relx=0, rely=0.05, relwidth=1, relheight=0.9)
 
-		# NOTES FRAME
-		self.notesTextBox = tk.Text(self.notesFrame)
+		###############
+		# NOTES FRAME #
+		###############
 
-		self.notesTextBox.place(relx=0.02, rely=0.02, relwidth=0.96, relheight=0.96)
+		# Creates note TextBox and configures it
+		self.notesTextBox = tk.Text(self.notesFrame, bg="#CBCBCB")
+		self.notesTextBox.insert("end", self.data[10])
+		self.stateNotes = 0
+		self.notesTextBox.configure(state="disabled")
+		self.notesTextBox.place(relx=0.02, rely=0.02, relwidth=0.96, relheight=0.86)
+
+		# Creates Save Button for Notes
+		self.toggleEditNotesButton = tk.Button(self.notesFrame, text="Toggle Edit", font="Calibri 16", bg="light yellow", command = self.toggleNotesEdit)
+		self.toggleEditNotesButton.place(relx=0.40, rely=0.9, relwidth=0.2, relheight=0.08)
 
 		# CALL LOG FRAME
 
-	def saveInfo(self):
+	def toggleInfoEdit(self):
+		"""This function changes the state of some Entryboxes from 'readonly' to 'normal' and others from 'readonly' to Dropmenues. """
+		
+		if self.stateInfo == 0:
+			self.firstNameEntry.config(state="normal")
+			self.lastNameEntry.config(state="normal")
+			self.prefixEntry.config(state="normal")
+			self.phoneEntry.config(state="normal")
+			self.emailEntry.config(state="normal")
+			self.specialtyEntry.config(state="normal")
+			self.genderEntry.config(state="normal")
+			self.hospitalEntry.config(state="normal")
+			self.companyEntry.config(state="normal")
+			
+			self.hospitalEntry.grid_forget()
+			self.companyEntry.grid_forget()
+
+			self.hospitalOptionmenu.grid(row=7, column=1, padx=5, pady=11, sticky="E")
+			self.companyOptionmenu.grid(row=8, column=1, padx=5, pady=11, sticky="E")
+
+			self.stateInfo = 1
+		elif self.stateInfo == 1:
+
+			# Fills company and hospital Entrybox with dropdown menu option chosen
+
+			self.hospitalEntry.delete(0, 'end')
+			self.hospitalEntry.insert(0, self.hospitalVar.get())
+
+			self.companyEntry.delete(0, 'end')
+			self.companyEntry.insert(0, self.companyVar.get())
+
+			self.firstNameEntry.config(state="readonly")
+			self.lastNameEntry.config(state="readonly")
+			self.prefixEntry.config(state="readonly")
+			self.phoneEntry.config(state="readonly")
+			self.emailEntry.config(state="readonly")
+			self.specialtyEntry.config(state="readonly")
+			self.genderEntry.config(state="readonly")
+			self.hospitalEntry.config(state="readonly")
+			self.companyEntry.config(state="readonly")
+
+			self.hospitalOptionmenu.grid_forget()
+			self.companyOptionmenu.grid_forget()
+
+			self.hospitalEntry.grid(row=7, column=1, padx=5, pady=11, sticky="E")
+			self.companyEntry.grid(row=8, column=1, padx=5, pady=11, sticky="E")
+
+			self.stateInfo = 0
+
+		return
+
+
+	def toggleNotesEdit(self):
+		if self.stateNotes == 0:
+			self.notesTextBox.config(state = "normal")
+			self.notesTextBox.config(bg="white")
+			self.stateNotes = 1
+		elif self.stateNotes == 1:
+			self.notesTextBox.config(state = "disabled")
+			self.notesTextBox.config(bg = "#CBCBCB")
+			self.stateNotes = 0
+
 		return
 	
-	def toggleEdit(self):
+	def closeWindow(self):
+		print("Closing Window")
+		self.saveData()
+		self.main_tab.updateListbox("")
+		self.window.destroy()
+		
 		return
 
+	def saveData(self):
+		"""Checks if any changes were made and saves data if there were changes."""
+		print("Testing TESTING:")
+		print(self.hospitalVar.get())
+		print(type(self.hospitalVar.get()))
+		print(self.hospitalName)
+		print(type(self.hospitalName))
+		
+		ID = self.data[0]
 
-# Test 3
+		if self.data[1] != self.firstNameEntry.get():
+			print("First Name Changed")
+			newName = self.firstNameEntry.get()
+			self.cur_main.execute(f"UPDATE doctor SET first_name = '{newName}' WHERE id={ID}")
+		if self.data[2] != self.lastNameEntry.get():
+			print("Last Name Changed")
+			newLastName = self.lastNameEntry.get()
+			self.cur_main.execute(f"UPDATE doctor SET last_name = '{newLastName}' WHERE id={ID}")
+		if self.data[9] != self.prefixEntry.get():
+			print("Prefix Changed")
+			newPrefix = self.prefixEntry.get()
+			self.cur_main.execute(f"UPDATE doctor SET prefix = '{newPrefix}' WHERE id={ID}")
+		if self.data[3] != self.phoneEntry.get():
+			print("Phone Changed")
+			newPhone = self.phoneEntry.get()
+			self.cur_main.execute(f"UPDATE doctor SET phone = '{newPhone}' WHERE id={ID}")
+		if self.data[4] != self.emailEntry.get():
+			print("Email Changed")
+			newEmail = self.emailEntry.get()
+			self.cur_main.execute(f"UPDATE doctor SET email = '{newEmail}' WHERE id={ID}")
+		if self.data[5] != self.specialtyEntry.get():
+			print("Specialty Changed")
+			newSpecialty = self.specialtyEntry.get()
+			self.cur_main.execute(f"UPDATE doctor SET speciality = '{newSpecialty}' WHERE id={ID}")
+		if self.data[6] != self.genderEntry.get():
+			print("Gender Changed")
+			newGender = self.genderEntry.get()
+			self.cur_main.execute(f"UPDATE doctor SET gender = '{newGender}' WHERE id={ID}")
+		if self.hospitalVar.get() != self.hospitalName:
+			print("Hospital Changed")
+			if self.hospitalVar.get() == "None":
+				newHospital = "None"
+			else:
+				newHospital = self.hospitalVar.get().split()[0]
+
+			self.cur_main.execute(f"UPDATE doctor SET hospital_id = '{newHospital}' WHERE id={ID}")
+		if self.companyVar.get() != self.companyName:
+			print("Company Changed")
+			if self.companyVar.get() == "None":
+				newCompany = "None"
+			else:
+				newCompany = self.companyVar.get().split()[0]
+			
+			self.cur_main.execute(f"UPDATE doctor SET company_id = '{newCompany}' WHERE id={ID}")
+
+		if self.data[10] != self.notesTextBox.get("1.0", "end-1c"):
+			print("Notes Changed")
+			newNotes = self.notesTextBox.get("1.0", "end-1c")
+			self.cur_main.execute(f"UPDATE doctor SET notes = '{newNotes}' WHERE id ={ID}")
+
+	def getHospitalByID(self, ID):
+		print("ID: ", type(ID))
+		if ID is None:
+			return None
+		get_hospital_query = f"SELECT * FROM hospital WHERE id={ID}"
+		self.cur_main.execute(get_hospital_query)
+		hospital = self.cur_main.fetchone()
+		print("GETTING HOSPITAL BY ID")
+		print(hospital)
+		print(type(hospital))
+		return hospital
+
+	def getCompanyByID(self, ID):
+		if ID is None:
+			return None
+		get_company_query = f"SELECT * FROM company WHERE id={ID}"
+		self.cur_main.execute(get_company_query)
+		company = self.cur_main.fetchone()
+		print("GETTING COMPANY BY ID")
+		print(company)
+		print(type(company))
+		return company

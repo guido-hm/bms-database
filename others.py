@@ -120,8 +120,7 @@ class OtherTab:
 				processed_hospital_id = None
 			else:
 				processed_hospital_id = hospital.get().split()[0]
-				print("This is my type")
-				print(type(processed_hospital_id))
+
 
 			# Checks if user included company for doctor
 			if company.get() == "None":
@@ -247,7 +246,6 @@ class OtherInfoViewer:
 		other_list = self.cur_main.fetchall()
 
 		for other in other_list:
-			print(other[0], other[1], other[2], other[3], other[4], other[5], other[6], other[7], other[8], other[9], other[10], other[11], other[12] )
 			id = other[0]
 			first = self.shortenDisplay(other[1], 14)
 			last = self.shortenDisplay(other[2], 16)
@@ -312,9 +310,6 @@ class OtherInfoViewer:
 		get_hospital_query = f"SELECT * FROM hospital WHERE id={ID}"
 		self.cur_main.execute(get_hospital_query)
 		hospital = self.cur_main.fetchone()
-		print("GETTING HOSPITAL BY ID")
-		print(hospital)
-		print(type(hospital))
 		return hospital
 
 	def getCompanyByID(self, ID):
@@ -323,9 +318,7 @@ class OtherInfoViewer:
 		get_company_query = f"SELECT * FROM company WHERE id={ID}"
 		self.cur_main.execute(get_company_query)
 		company = self.cur_main.fetchone()
-		print("GETTING HOSPITAL BY ID")
-		print(company)
-		print(type(company))
+
 		return company
 
 
@@ -341,5 +334,4 @@ class OtherInfoViewer:
 
 		string = string[:length-3]
 		string += '...'
-		print(string)
 		return string.upper()

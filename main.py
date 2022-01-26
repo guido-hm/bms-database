@@ -49,9 +49,7 @@ class MainWindow:
 		self.label1.place(relx=0.25, rely=0.15)
 
 		# Calls function to connect to login database
-		print("Heyo")
 		self.ConnectToLoginDatabase()
-		print("Heyo2")
 
 	def Login(self, username, password):
 		""" Compares the entered password hash to the hash stored in the database.
@@ -123,20 +121,15 @@ class MainWindow:
 		
 		selected_tab = event.widget.select()
 		tab_text = event.widget.tab(selected_tab, "text")
-		print("Selected Tab: ", selected_tab, "     ", tab_text)
 
 		if tab_text == "Doctors":
 			self.doctorsTabInfo.refreshOptionMenu()
-			print("docs")
 		elif tab_text == "Hospitals":
 			self.hospitalsTabInfo.refreshOptionMenu()
-			print("hospitals")
 		elif tab_text == "Others":
 			self.othersTabInfo.refreshOptionMenu()
-			print("others")
 		elif tab_text == "Resellers":
 			self.resellersTabInfo.refreshOptionMenu()
-			print("resellers")
 		
 		return
 
@@ -211,7 +204,6 @@ class MainWindow:
 			self.cur_login.execute("SELECT datname FROM pg_database;")
 
 			list_database = self.cur_login.fetchall()
-			print(list_database)
 
 			login_database_name = "daddysdata_login"
 
@@ -303,7 +295,6 @@ class MainWindow:
 			self.cur_main.execute("SELECT datname FROM pg_database;")
 
 			list_database = self.cur_main.fetchall()
-			print(list_database)
 
 			main_database_name = "daddysdata"
 

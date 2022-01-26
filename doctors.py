@@ -64,7 +64,6 @@ class DoctorTab:
 		self.infoViewer = DoctorInfoViewer(tabFrame, self.cur_main)
 
 	def createOptionMenu(self):
-		print("We are creating things!!!!")
 		# Creates list of companies for Optionmenu
 		companyList = [None]
 		self.cur_main.execute("SELECT id || ' ' || name FROM company")
@@ -114,8 +113,6 @@ class DoctorTab:
 				processed_hospital_id = None
 			else:
 				processed_hospital_id = hospital.get().split()[0]
-				print("This is my type")
-				print(type(processed_hospital_id))
 			# Checks if user included company for docotr
 			if company.get() == "None":
 				processed_company_id = None
@@ -250,8 +247,6 @@ class DoctorInfoViewer:
 
 		self.cur_main.execute(populate_query)
 		doctor_list = self.cur_main.fetchall()
-		print("\n\n\nTHIS IS THE DOCTOR LIST:\n\n\n")
-		print(doctor_list)
 
 		for doctor in doctor_list:
 			id = doctor[0]
@@ -294,7 +289,6 @@ class DoctorInfoViewer:
 
 		# Gets Index of selected cell
 		current_line_index = self.infoListbox.curselection()
-		print("Cur Line: ", current_line_index[0])
 		
 		# Gets text of cell in index given by current_line_index
 		item_text = self.infoListbox.get(current_line_index)
@@ -310,15 +304,12 @@ class DoctorInfoViewer:
 
 
 	def getHospitalByID(self, ID):
-		print("ID: ", type(ID))
 		if ID is None:
 			return None
 		get_hospital_query = f"SELECT * FROM hospital WHERE id={ID}"
 		self.cur_main.execute(get_hospital_query)
 		hospital = self.cur_main.fetchone()
-		print("GETTING HOSPITAL BY ID")
-		print(hospital)
-		print(type(hospital))
+
 		return hospital
 
 	def getCompanyByID(self, ID):
@@ -327,9 +318,6 @@ class DoctorInfoViewer:
 		get_company_query = f"SELECT * FROM company WHERE id={ID}"
 		self.cur_main.execute(get_company_query)
 		company = self.cur_main.fetchone()
-		print("GETTING HOSPITAL BY ID")
-		print(company)
-		print(type(company))
 		return company
 
 	def shortenDisplay(self, string, length):
@@ -343,7 +331,6 @@ class DoctorInfoViewer:
 
 		string = string[:length-3]
 		string += '...'
-		print(string)
 		return string.upper()
 
 	
@@ -659,9 +646,6 @@ class DataWindow:
 		get_hospital_query = f"SELECT * FROM hospital WHERE id={ID}"
 		self.cur_main.execute(get_hospital_query)
 		hospital = self.cur_main.fetchone()
-		print("GETTING HOSPITAL BY ID")
-		print(hospital)
-		print(type(hospital))
 		return hospital
 
 	def getCompanyByID(self, ID):
@@ -670,7 +654,4 @@ class DataWindow:
 		get_company_query = f"SELECT * FROM company WHERE id={ID}"
 		self.cur_main.execute(get_company_query)
 		company = self.cur_main.fetchone()
-		print("GETTING COMPANY BY ID")
-		print(company)
-		print(type(company))
 		return company

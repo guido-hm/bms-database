@@ -72,7 +72,6 @@ class HospitalTab:
 		# Creates company Optionmenu Variable
 		self.companyVar = tk.StringVar(self.tabFrame)
 		self.companyVar.set(None)
-		print(type(self.companyVar.get()))
 		self.companyOptionMenu = tk.OptionMenu(self.tabFrame, self.companyVar, *companyList)
 
 		# Places company Optionmenu
@@ -99,7 +98,6 @@ class HospitalTab:
 		insert_query = "INSERT INTO hospital (name, phone, email, city, state, zipcode, company_id, notes, verified) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)"
 		insert_data = (name.get(), phone.get(), email.get(), city.get(), state.get(), zipcode.get(), processed_company_id, "", True)
 
-		print("DATA TYPES BELOW")
 
 		# Execute querty statement with data
 		self.cur_main.execute(insert_query, insert_data)
@@ -210,7 +208,6 @@ class HospitalInfoViewer:
 			populate_query = "SELECT * FROM hospital WHERE " + conditions
 		else:
 			populate_query = "SELECT * FROM hospital"
-		print("POPU QUERY", populate_query)
 		self.cur_main.execute(populate_query)
 		hospital_list = self.cur_main.fetchall()
 
@@ -272,9 +269,7 @@ class HospitalInfoViewer:
 		get_company_query = f"SELECT * FROM company WHERE id={ID}"
 		self.cur_main.execute(get_company_query)
 		company = self.cur_main.fetchone()
-		print("GETTING HOSPITAL BY ID")
-		print(company)
-		print(type(company))
+
 		return company
 
 
@@ -289,7 +284,6 @@ class HospitalInfoViewer:
 
 		string = string[:length-3]
 		string += '...'
-		print(string)
 		return string.upper()
 
 

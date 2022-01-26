@@ -202,8 +202,6 @@ class ResellerInfoViewer:
 		self.cur_main.execute(populate_query)
 		reseller_list = self.cur_main.fetchall()
 
-		print("THIS IS THE LIST\n\n\n")
-		print(reseller_list)
 
 		for reseller in reseller_list:
 			id = reseller[0]
@@ -266,9 +264,6 @@ class ResellerInfoViewer:
 		get_company_query = f"SELECT * FROM company WHERE id={ID}"
 		self.cur_main.execute(get_company_query)
 		company = self.cur_main.fetchone()
-		print("GETTING HOSPITAL BY ID")
-		print(company)
-		print(type(company))
 		return company
 
 	def shortenDisplay(self, string, length):
@@ -282,5 +277,4 @@ class ResellerInfoViewer:
 
 		string = string[:length-3]
 		string += '...'
-		print(string)
 		return string.upper()

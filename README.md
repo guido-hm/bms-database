@@ -1,3 +1,4 @@
 # bms-database
-A database of doctors, hospitals, resellers, and other clients.
-Ready to use.
+
+A database GUI of doctors, hospitals, resellers, and other clients.
+Created this project to learn more about tkinter, python classes, and database management
